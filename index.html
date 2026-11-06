@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSIA Protocol Registry</title>
+<meta name="theme-color" content="#081426">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Protocols">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@500;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: night-airfield hero with the org title and a split-flap "next protocol" board; pill tabs overlap its lower edge; quiet light content below. */
+  --bg:#f2f4f8; --surface:#ffffff; --surface-2:#f7f9fc; --ink:#0d1a2b; --muted:#5a6779; --line:#e1e6ee;
+  --accent:#1f4e8c; --accent-ink:#ffffff; --accent-soft:#e7eef9;
+  --vvip:#d92d20; --vvip-soft:#fde8e6; --vip:#b7791f; --vip-soft:#fbf0d9; --cour:#0e8a7d; --cour-soft:#dcf3ef; --cat-ink:#ffffff;
+  --ok:#15803d; --ok-soft:#e2f5e8; --warn:#c2410c; --warn-soft:#fdede3; --info:#1f4e8c; --info-soft:#e7eef9; --arr:#1d4ed8; --arr-soft:#e9f0ff; --arr-line:#bcd0fb; --dep:#7e22ce; --dep-soft:#f4ebff; --dep-line:#dcc4fb;
+  --night:#081426; --night-2:#0d2244; --amber:#ffb627; --board:#050c18; --cell:#101b2e;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --shadow:0 1px 2px rgba(13,26,43,.05),0 10px 30px -14px rgba(13,26,43,.22);
+  --r:16px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0a111c; --surface:#111a27; --surface-2:#0e1622; --ink:#e6ecf3; --muted:#97a5b7; --line:#22304a;
+  --accent:#86b4f2; --accent-ink:#06142a; --accent-soft:#152a48;
+  --vvip:#ff6f63; --vvip-soft:#3b1613; --vip:#f1b84d; --vip-soft:#382a10; --cour:#3fcab9; --cour-soft:#0f312d; --cat-ink:#0b1220;
+  --ok:#55d98a; --ok-soft:#0f2e1b; --warn:#ff9a5c; --warn-soft:#3a1e0f; --info:#86b4f2; --info-soft:#152a48; --arr:#8fb3ff; --arr-soft:#16244a; --arr-line:#2b4486; --dep:#d1a4ff; --dep-soft:#2a1842; --dep-line:#4f2d7c;
+  --shadow:0 1px 0 rgba(255,255,255,.03),0 12px 30px -16px rgba(0,0,0,.6); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0a111c; --surface:#111a27; --surface-2:#0e1622; --ink:#e6ecf3; --muted:#97a5b7; --line:#22304a;
+  --accent:#86b4f2; --accent-ink:#06142a; --accent-soft:#152a48;
+  --vvip:#ff6f63; --vvip-soft:#3b1613; --vip:#f1b84d; --vip-soft:#382a10; --cour:#3fcab9; --cour-soft:#0f312d; --cat-ink:#0b1220;
+  --ok:#55d98a; --ok-soft:#0f2e1b; --warn:#ff9a5c; --warn-soft:#3a1e0f; --info:#86b4f2; --info-soft:#152a48; --arr:#8fb3ff; --arr-soft:#16244a; --arr-line:#2b4486; --dep:#d1a4ff; --dep-soft:#2a1842; --dep-line:#4f2d7c;
+  --shadow:0 1px 0 rgba(255,255,255,.03),0 12px 30px -16px rgba(0,0,0,.6); color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:800;font-stretch:108%;line-height:1.1}
+h2{font-size:17px;font-weight:700;font-stretch:105%}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .small{font-size:13px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;color:#e9eef7;
+  background:radial-gradient(900px 380px at 88% -20%,rgba(255,182,39,.18),transparent 62%),radial-gradient(700px 460px at -5% 125%,rgba(14,138,125,.42),transparent 60%),linear-gradient(165deg,var(--night-2),var(--night) 62%)}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:22px 22px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 85%);mask-image:linear-gradient(180deg,#000,transparent 85%);pointer-events:none}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:30px;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 34px,transparent 34px 62px);opacity:.5}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center;padding-top:30px;padding-bottom:74px}
+.idblock{display:flex;gap:18px;align-items:center;min-width:0}
+.logo{flex:0 0 auto;width:76px;height:76px;border-radius:18px;background:#fff;display:grid;place-items:center;box-shadow:0 10px 30px -10px rgba(0,0,0,.6),inset 0 0 0 1px rgba(13,26,43,.06);overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:contain;padding:6px}
+.logo .ph{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--night)}
+.logo .ph svg{width:30px;height:30px}
+.logo .ph b{font:800 12px/1 var(--display);font-stretch:120%;letter-spacing:.12em}
+.l1{font:700 clamp(12.5px,1.6vw,17px)/1.25 var(--display);font-stretch:118%;letter-spacing:.06em;color:#dfe7f3}
+.l2{font:600 clamp(11px,1.2vw,13px)/1.3 var(--body);letter-spacing:.24em;color:var(--amber);margin-top:6px}
+.l3{font:900 clamp(32px,5.4vw,58px)/.95 var(--display);font-stretch:112%;letter-spacing:-.02em;margin-top:8px;color:#fff}
+.l3 span{color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.75)}
+.edition{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font:600 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.22);color:#cfd9e8;background:rgba(255,255,255,.05)}
+.edition[hidden]{display:none}
+.edition i{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(255,182,39,.22)}
+
+/* split-flap board */
+.board{background:var(--board);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 20px 50px -20px rgba(0,0,0,.8);min-width:330px;text-decoration:none;color:inherit;display:block}
+.board:hover{border-color:rgba(255,182,39,.4)}
+.board .bl{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;font:600 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:#8c9ab0}
+.board .bl b{color:var(--amber);font-weight:600}
+.flaps{display:flex;gap:16px;margin-top:12px;align-items:flex-end;flex-wrap:wrap}
+.flapgrp{display:flex;flex-direction:column;gap:6px}
+.flapgrp small{font:600 9.5px/1 var(--body);letter-spacing:.18em;color:#6f7d93}
+.cells{display:flex;gap:3px}
+.c{position:relative;width:24px;height:34px;display:grid;place-items:center;background:linear-gradient(180deg,#14223a 0 50%,var(--cell) 50%);border-radius:4px;font:700 19px/1 var(--mono);color:var(--amber);box-shadow:inset 0 -1px 0 rgba(0,0,0,.6)}
+.c::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.75)}
+.c.sep{background:none;box-shadow:none;width:10px}
+.c.sep::after{display:none}
+.board .who{margin-top:14px;color:#fff;font-weight:600;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.board .who .dsg{color:#9fb0c8;font-weight:400;font-size:13px}
+.board .none{margin-top:14px;font:600 13px var(--mono);color:#6f7d93;letter-spacing:.1em}
+
+/* ---------- tabs ---------- */
+.tabsbar{position:sticky;top:8px;z-index:20;margin-top:-30px}
+.tabs{display:flex;gap:4px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14.5px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a[aria-current="page"]{background:var(--night);color:#fff}
+.tabs .count{font:700 11px/1 var(--mono);background:var(--vvip);color:#fff;border-radius:999px;padding:3px 7px}
+.tabs .cta{margin-left:auto;background:var(--amber);color:#1b1300}
+.tabs .cta:hover{background:#ffc552;color:#1b1300}
+
+main.wrap{padding-top:28px;padding-bottom:80px;display:flex;flex-direction:column;gap:22px}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.pagehead p{margin:6px 0 0;color:var(--muted)}
+.eyebrow{font:700 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.banner{display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.banner b{color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.card.flush{padding:0;overflow:hidden}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 18px 12px}
+.card:not(.flush) > .cardhead{padding:0 0 12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;align-items:start}
+.split{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr);gap:18px;align-items:start}
+@media (max-width:980px){.split{grid-template-columns:1fr}}
+
+/* ---------- KPI tiles ---------- */
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:128px;padding:14px 15px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);position:relative;transition:transform .15s,border-color .15s}
+.kpi:hover{transform:translateY(-2px);border-color:var(--accent)}
+.kpi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kpi .k{font:700 10.5px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpi .n{font:800 42px/1 var(--display);font-stretch:112%;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .l{font-size:13px;line-height:1.3;color:var(--muted)}
+.kpi.alert{background:linear-gradient(180deg,var(--warn-soft),var(--surface) 70%);border-color:color-mix(in srgb,var(--warn) 35%,var(--line))}
+.kpi.alert .n{color:var(--warn)}
+.kpi.good .n{color:var(--ok)}
+.kpi.sched .n{color:var(--ink)}
+.kpi[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.kpi[aria-pressed="true"]::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:var(--surface);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:translateX(-50%) rotate(45deg)}
+
+/* ---------- today overview ---------- */
+.overview{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.25fr) minmax(230px,.72fr);gap:16px;align-items:stretch}
+.overview.si{grid-template-columns:minmax(0,2fr) minmax(230px,.8fr)}
+@media (max-width:1100px){.overview{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.overview .sched{grid-column:1/-1}.overview.si .sched{grid-column:auto}}
+@media (max-width:680px){.overview,.overview.si{grid-template-columns:1fr}.overview.si .sched{grid-column:1/-1}}
+.sched{position:relative;overflow:hidden;border-radius:20px;padding:20px 22px 18px;color:#e9eef7;
+  background:radial-gradient(420px 220px at 100% 0%,rgba(255,182,39,.16),transparent 65%),radial-gradient(380px 260px at 0% 110%,rgba(14,138,125,.35),transparent 60%),linear-gradient(160deg,var(--night-2),var(--night));
+  box-shadow:0 18px 40px -22px rgba(8,20,38,.75);border:1px solid rgba(255,255,255,.06)}
+.sched::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.2px);background-size:18px 18px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 70%);mask-image:linear-gradient(180deg,#000,transparent 70%);pointer-events:none}
+.schead{position:relative;display:flex;justify-content:space-between;align-items:center;font:700 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:#8fa0b8}
+.live{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);letter-spacing:.06em;color:#cfd9e8}
+.live i{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.2)}
+.stats{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
+.stat{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;padding:8px 14px 10px;border-left:1px solid rgba(255,255,255,.1);border-radius:12px;transition:background .15s}
+.stat:first-child{border-left-color:transparent}
+button.stat{cursor:pointer}
+button.stat:hover{background:rgba(255,255,255,.05)}
+.stat .n{font:800 clamp(40px,4.6vw,56px)/1 var(--display);font-stretch:112%;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+.stat.hot .n{color:var(--amber)}
+.stat .l{font:600 13px/1 var(--body);color:#9fb0c8}
+.stat[aria-pressed="true"]{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,182,39,.45)}
+.stat[aria-pressed="true"] .l{color:var(--amber)}
+.stat:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.week{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;height:104px;margin-top:16px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.12)}
+.day{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;min-height:0}
+.day .bar{width:100%;max-width:30px;border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.12))}
+.day.zero .bar{background:rgba(255,255,255,.08)}
+.day.today .bar{background:linear-gradient(180deg,#ffd27a,var(--amber));box-shadow:0 0 18px -2px rgba(255,182,39,.55)}
+.day .dn{font:700 11.5px/1 var(--mono);color:#cfd9e8}
+.day.zero .dn{color:#5f6f86}
+.day .dd{font:700 9.5px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#7d8ca3}
+.day.today .dd{color:var(--amber)}
+.attn{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 14px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.attnhead{display:flex;justify-content:space-between;align-items:center;padding:0 6px 6px}
+.attnhead .tot{font:700 12px/1 var(--body);padding:6px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.attnhead .tot.clear{background:var(--ok-soft);color:var(--ok)}
+.arow{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border-radius:14px;border:1px solid transparent;transition:background .15s,border-color .15s}
+.arow:hover{background:var(--surface-2)}
+.arow:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.arow .ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--warn-soft);color:var(--warn)}
+.arow .ic svg{width:20px;height:20px}
+.arow.clear .ic{background:var(--ok-soft);color:var(--ok)}
+.arow .t{display:block;font-weight:700;font-size:14.5px;line-height:1.25}
+.arow .s{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.arow .n{font:800 30px/1 var(--display);font-stretch:112%;color:var(--warn);font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
+.arow.clear .n{color:var(--ok);opacity:.7}
+.arow[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.donecard{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);transition:border-color .15s}
+button.donecard{cursor:pointer}
+button.donecard:hover{border-color:var(--ok)}
+.donecard[aria-pressed="true"]{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok),var(--shadow)}
+.donecard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ring{position:relative;width:132px;height:132px;display:block}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:12}
+.ring .trk{stroke:var(--line)}
+.ring .prg{stroke:var(--ok);stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ring .rv b{font:800 40px/1 var(--display);font-stretch:112%;color:var(--ink)}
+.ring .rv small{font:600 12px/1 var(--body);color:var(--muted)}
+.rl{font-size:13px;font-weight:600;color:var(--muted)}
+
+
+.daylabel{padding:12px 18px}
+.dl{display:flex;align-items:center;gap:10px;letter-spacing:0;text-transform:none}
+.dl-day{font:800 17px/1 var(--display);font-stretch:108%;color:var(--accent)}
+.daylabel.istoday .dl-day{color:var(--warn)}
+.dl-date{font:700 13.5px/1 var(--mono);background:var(--night);color:var(--amber);padding:6px 9px;border-radius:7px;letter-spacing:.03em}
+/* register boxes */
+.dbox{display:inline-flex;flex-direction:column;align-items:center;gap:4px;background:var(--night);color:var(--amber);padding:8px 11px;border-radius:11px;box-shadow:0 6px 16px -10px rgba(8,20,38,.8)}
+.dbox b{font:700 16px/1 var(--mono);letter-spacing:.02em}
+.dbox small{font:700 9.5px/1 var(--body);letter-spacing:.16em;color:#8c9ab0;text-transform:uppercase}
+.tbox{display:inline-flex;flex-direction:column;gap:4px;font:700 18px/1 var(--mono);padding:9px 11px;border-radius:11px;background:var(--surface-2);border:1.5px solid var(--line);color:var(--ink)}
+.tbox small{font:600 10.5px/1.2 var(--body);color:var(--muted)}
+.dir{display:inline-flex;align-items:center;gap:6px;font:700 12.5px/1 var(--body);padding:8px 11px 8px 9px;border-radius:10px;border:1.5px solid;white-space:nowrap}
+.dir svg{width:15px;height:15px}
+.dir.arr{color:var(--arr);background:var(--arr-soft);border-color:var(--arr-line)}
+.dir.dep{color:var(--dep);background:var(--dep-soft);border-color:var(--dep-line)}
+.dom{display:inline-block;margin-top:6px;font:700 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:4px 6px}
+table.reg td.date,table.reg td.time{vertical-align:middle}
+/* report summary */
+.repsum .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.repsum .meter{position:relative;margin-top:16px;height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.repsum .meter span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#34d399,#10b981)}
+.repsum .cats{position:relative;display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.repsum .cats > span{display:inline-flex;align-items:center;gap:8px;font:600 13px/1 var(--body);color:#cfd9e8;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:6px 10px 6px 6px;border-radius:999px}
+.repsum .cats > span > b{font:700 13px var(--mono);color:#fff}
+/* sign in */
+.login{max-width:520px;width:100%;margin:10px auto 0;display:flex;flex-direction:column;gap:20px;padding:26px}
+.rolepick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rolepick button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2)}
+.rolepick button b{font:800 16px/1.1 var(--display);font-stretch:108%}
+.rolepick button small{font-size:12.5px;color:var(--muted);line-height:1.3}
+.rolepick button[aria-pressed="true"]{border-color:var(--night);background:var(--night);color:#fff}
+.rolepick button[aria-pressed="true"] small{color:#b9c6d8}
+.rolepick button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:420px){.rolepick{grid-template-columns:1fr}}
+.tabs .signout{flex:0 0 auto;font:600 14px var(--body);color:var(--muted);background:none;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+.tabs .signout:hover{color:var(--vvip);background:var(--surface-2)}
+.tabs .signout.push{margin-left:auto}
+.btn:disabled{opacity:.55;cursor:wait}
+/* ---------- category & status ---------- */
+.cat{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--display);font-stretch:115%;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px 5px 8px;border-radius:6px;color:var(--cat-ink);white-space:nowrap}
+.cat::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
+.cat.vvip{background:var(--vvip)} .cat.vip{background:var(--vip)} .cat.cour{background:var(--cour)}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--body);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.info{background:var(--info-soft);color:var(--info)}
+.pill.muted{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.att{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1.2 var(--body);color:var(--ink)}
+.att svg{width:15px;height:15px;color:var(--muted)}
+.att.none{color:var(--warn)}
+.att.none svg{color:var(--warn)}
+
+/* ---------- movement rows ---------- */
+.daylabel{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mv{--cat:var(--line);display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 18px;border-top:1px solid var(--line);text-decoration:none;color:inherit;position:relative}
+.daylabel + .mv{border-top:0}
+.mv::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--cat)}
+.mv.vvip{--cat:var(--vvip)} .mv.vip{--cat:var(--vip)} .mv.cour{--cat:var(--cour)}
+.mv:hover{background:var(--surface-2)}
+.chipboard{background:var(--board);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.chipboard b{font:700 19px/1 var(--mono);color:var(--amber);letter-spacing:.02em}
+.chipboard span{font:700 9.5px/1 var(--body);letter-spacing:.16em;color:#8c9ab0}
+.mv .fl{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.mv .fl .mono{font-weight:700;font-size:15px}
+.mv .fl .rt{color:var(--muted);font-size:13px;font-family:var(--mono)}
+.mv .nm{font-weight:700;margin-top:3px}
+.mv .ds{font-size:13px;color:var(--muted)}
+.mv .side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.mv .side .row{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.flag{font-size:12px;color:var(--warn);font-weight:600}
+@media (max-width:620px){
+  .mv{grid-template-columns:78px minmax(0,1fr);gap:12px;padding:14px 14px 14px 16px}
+  .mv .side{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start}
+  .mv .side .row{justify-content:flex-start}
+  .chipboard b{font-size:17px}
+}
+.listtitle{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.empty{padding:28px 18px;color:var(--muted);text-align:center}
+
+/* action list */
+.act{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);text-decoration:none;color:inherit}
+.act:hover{background:var(--surface-2)}
+.act .dot{width:10px;height:10px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 4px var(--warn-soft)}
+.act.crit .dot{background:var(--vvip);box-shadow:0 0 0 4px var(--vvip-soft)}
+.act .what{font-weight:600;font-size:14px}
+.act .ctx{font-size:12.5px;color:var(--muted)}
+.act .when{font:600 12px var(--mono);color:var(--muted);white-space:nowrap}
+
+/* ---------- buttons & forms ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:600 14px/1.2 var(--body);padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--night);color:#fff;border-color:var(--night)}
+.btn.primary:hover{background:var(--night-2);color:#fff}
+.btn.amber{background:var(--amber);border-color:var(--amber);color:#1b1300}
+.btn.amber:hover{background:#ffc552;color:#1b1300}
+.btn.danger{color:var(--vvip)}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:8px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+label.f .req{color:var(--vvip)}
+input,select,textarea{width:100%;font:15px/1.35 var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+textarea{min-height:70px;resize:vertical}
+input[type=file]{padding:10px;background:var(--surface-2);border-style:dashed}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.fgrid .wide{grid-column:1/-1}
+.formsec{display:flex;flex-direction:column;gap:14px}
+.secno{display:flex;align-items:center;gap:10px;font:800 12px/1 var(--display);font-stretch:118%;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);padding-top:6px}
+.secno b{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--night);color:var(--amber);font:700 12px var(--mono)}
+.mvrow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) auto;gap:10px;align-items:end;padding:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px}
+@media (max-width:900px){.mvrow{grid-template-columns:repeat(2,minmax(0,1fr))}.mvrow .rm{grid-column:1/-1}}
+.catbox{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.err{color:var(--vvip);font-size:13px;font-weight:600}
+
+/* ---------- case page ---------- */
+.casehead{position:relative;overflow:hidden}
+.casehead::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--cat,var(--line))}
+.casehead.vvip{--cat:var(--vvip)} .casehead.vip{--cat:var(--vip)} .casehead.cour{--cat:var(--cour)}
+.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s}
+.steps li{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:12.5px;font-weight:600;color:var(--muted);padding-right:8px}
+.steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:2px solid var(--line);font:700 12px var(--mono);position:relative;z-index:1}
+.steps li::after{content:"";position:absolute;top:13px;left:26px;right:0;height:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li.done{color:var(--ink)}
+.steps li.done::before{content:"✓";background:var(--ok);border-color:var(--ok);color:#fff}
+.steps li.done::after{background:var(--ok)}
+.steps li.now{color:var(--accent)}
+.steps li.now::before{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+dl.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 16px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)} dl.kv dd{margin:0;overflow-wrap:anywhere}
+dd.missing{color:var(--warn);font-weight:600}
+.secrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.secrow:first-of-type{border-top:0}
+.mvtable{width:100%;border-collapse:collapse;font-size:14px}
+.mvtable th{text-align:left;font:700 10.5px/1 var(--body);letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.mvtable td{padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.mvtable tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto}
+.log{list-style:none;margin:0;padding:0;font-size:13.5px}
+.log li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0}
+.log time{font:500 12px var(--mono);color:var(--muted)}
+.thumb{display:inline-flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);cursor:pointer;color:var(--ink);font:600 13px var(--body);max-width:100%}
+.thumb img{width:48px;height:48px;object-fit:cover;border-radius:6px}
+.thumb .doc{display:grid;place-items:center;width:48px;height:48px;border-radius:6px;background:var(--night);color:var(--amber);font:700 11px var(--mono)}
+.thumb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- register ---------- */
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.filters label.f{min-width:150px;flex:1}
+table.reg{width:100%;border-collapse:collapse;font-size:14px}
+table.reg thead th{background:var(--night);color:#cdd8e8;font:700 10.5px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:13px 14px;white-space:nowrap}
+table.reg td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+table.reg tr.newday td{border-top:2px solid var(--line)}
+table.reg td.date{font:700 13px var(--mono);white-space:nowrap}
+table.reg td.time{font:600 13px var(--mono);white-space:nowrap}
+table.reg tbody tr{cursor:pointer}
+table.reg tbody tr:hover td{background:var(--surface-2)}
+@media (max-width:760px){
+  table.reg thead{display:none}
+  table.reg,table.reg tbody,table.reg tr,table.reg td{display:block;width:100%}
+  table.reg tr{padding:12px 16px;border-bottom:1px solid var(--line)}
+  table.reg td{border:0;padding:3px 0;display:grid;grid-template-columns:100px minmax(0,1fr);gap:8px}
+  table.reg td::before{content:attr(data-label);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--body);font-weight:700;padding-top:2px}
+  table.reg tr.newday td{border:0}
+}
+/* reports */
+.bars{display:flex;flex-direction:column;gap:10px}
+.barrow{display:grid;grid-template-columns:minmax(110px,40%) minmax(0,1fr) 34px;gap:12px;align-items:center;font-size:13.5px}
+.barrow .track{height:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.barrow .fill{display:block;height:100%;border-radius:999px;background:var(--accent)}
+.barrow .fill.vvip{background:var(--vvip)} .barrow .fill.vip{background:var(--vip)} .barrow .fill.cour{background:var(--cour)}
+.barrow .v{font:700 13px var(--mono);text-align:right}
+/* modal & toast */
+.modal{position:fixed;inset:0;background:rgba(5,12,24,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px;z-index:50}
+.modal[hidden]{display:none}
+.sheet{background:var(--surface);color:var(--ink);border-radius:18px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:16px;border:1px solid var(--line);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+.sheet img.full{max-width:100%;border-radius:10px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,8px);background:var(--night);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:var(--muted)}
+@media (max-width:820px){
+  .hero .wrap{grid-template-columns:1fr;padding-top:22px;padding-bottom:66px;gap:20px}
+  .board{min-width:0}
+  .wrap{padding:0 16px}
+  .logo{width:62px;height:62px;border-radius:15px}
+  .c{width:21px;height:30px;font-size:17px}
+}
+@media (max-width:420px){.idblock{align-items:flex-start}.c{width:19px;height:28px;font-size:15px}.flaps{gap:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="idblock">
+        <div class="logo" id="logo" aria-label="HSIA logo">
+          <div class="ph"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z"/></svg><b>HSIA</b></div>
+        </div>
+        <div>
+          <div class="l1">HAZRAT SHAHJALAL INTERNATIONAL AIRPORT</div>
+          <div class="l2">AIRPORT HEALTH OFFICE</div>
+        </div>
+      </div>
+      <div class="l3">PROTOCOL <span>Registry</span></div>
+      <div class="edition" hidden><i></i><span id="editionName"></span></div>
+    </div>
+    <a class="board" id="board" href="#today"></a>
+  </div>
+</header>
+<div class="wrap tabsbar"><nav class="tabs" id="tabs" aria-label="Sections"></nav></div>
+<main class="wrap" id="view"></main>
+<footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry</footer>
+<div id="modal" class="modal" hidden><div class="sheet" role="dialog" aria-modal="true" id="modalBody"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="firebase-config.js"></script>
+<script type="module">
+/* Firebase connection. Version pinned; the app talks to Firebase only through window.Backend. */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, getDoc, getDocs, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+try{
+  const app=initializeApp(window.FIREBASE_CONFIG);
+  const auth=getAuth(app);
+  const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
+  const ACC=window.HSIA_ACCOUNTS;
+  const roleOf=email=>email===ACC.doctor?'doctor':email===ACC.si?'si':null;
+  window.Backend={
+    onAuth:cb=>onAuthStateChanged(auth,u=>cb(u?{email:u.email,role:roleOf(u.email)}:null)),
+    signIn:(role,pw)=>signInWithEmailAndPassword(auth,ACC[role],pw),
+    signOut:()=>signOut(auth),
+    watchRecent:(since,cb,err)=>onSnapshot(query(collection(db,'protocols'),where('lastDate','>=',since)),snap=>cb(snap.docs.map(d=>d.data())),err),
+    loadMonth:month=>getDocs(query(collection(db,'protocols'),where('months','array-contains',month))).then(s=>s.docs.map(d=>d.data())),
+    getCase:id=>getDoc(doc(db,'protocols',id)).then(d=>d.exists()?d.data():null),
+    saveCase:c=>setDoc(doc(db,'protocols',c.id),c),
+    watchSettings:cb=>onSnapshot(doc(db,'settings','main'),d=>cb(d.exists()?d.data():null),()=>cb(null)),
+    saveSettings:s=>setDoc(doc(db,'settings','main'),s),
+    putFile:f=>{const ref=doc(collection(db,'files'));return {id:ref.id,done:setDoc(ref,f)};},
+    getFile:id=>getDoc(doc(db,'files',id)).then(d=>d.exists()?d.data():null)
+  };
+  window.dispatchEvent(new Event('backend-ready'));
+}catch(e){console.error(e);window.dispatchEvent(new Event('backend-failed'));}
+</script>
+<script>
+"use strict";
+let MODE=null;   // set at sign-in: "doctor" = Chief Airport Health Officer and doctors (full access); "si" = Sanitary Inspectors (view only)
+let USER=null, READY=false;
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return ymd(d);}
+const todayStr=()=>ymd(new Date());
+const tomorrowStr=()=>addDays(1);
+const dt=m=>new Date(m.date+'T'+m.time+':00');
+const parseStamp=s=>s?new Date(s.replace(' ','T')+':00'):null;
+function dmy(s){const p=s.split('-');return p[2]+'.'+p[1]+'.'+p[0].slice(2);}
+function longDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function shortDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});}
+function nowStamp(){const d=new Date();return ymd(d)+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function stamp(days,t){return addDays(days)+' '+t;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+let seq=100;
+const uid=p=>p+Date.now().toString(36)+(++seq).toString(36)+Math.random().toString(36).slice(2,8);
+function rel(ms){const h=(ms-Date.now())/36e5;const a=Math.abs(h);let t;if(a<1)t=Math.max(1,Math.round(a*60))+' min';else if(a<48)t=Math.round(a)+' h';else t=Math.round(a/24)+' d';return h>=0?'in '+t:t+' ago';}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2600);}
+const SEC={protocol:'Protocol section',vip:'VIP lounge section'};
+const WHO={Doctor:'Duty Doctor',SI:'Sanitary Inspector'};
+const CATCLS={1:'vvip',2:'vip',3:'cour'};
+const ICON={
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg>',
+  si:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
+  none:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>'
+};
+
+/* ---------- seed data (fictional) ---------- */
+function defaultRules(){return [
+  {tier:1,name:'VVIP',handler:'Doctor',note:'Duty Doctor attends in person',keywords:'minister, state minister, deputy minister, senior secretary, secretary, speaker, chief whip, standing committee chairman'},
+  {tier:2,name:'VIP',handler:'Doctor',note:'Duty Doctor attends',keywords:'director general, dg, additional director general, additional secretary, vice chancellor, grade-1, grade-2'},
+  {tier:3,name:'Courtesy',handler:'SI',note:'Duty Doctor sends the duty Sanitary Inspector',keywords:'joint secretary, deputy secretary, private secretary, director, line director, programme manager, deputy director'}
+];}
+function mk(o){
+  const c=Object.assign({id:uid('c'),files:{},log:[],fwd:{protocol:{},vip:{}},grade:'',guests:'',vehicles:'',contact:'',beneficiary:'Self',tierReason:''},o);
+  c.movements.forEach(m=>{if(!m.attendBy)m.attendBy=c.tier<=2?'Doctor':'SI';});
+  return c;
+}
+function mv(o){return Object.assign({id:uid('m'),scope:'International',status:'Open',attendBy:'',assigned:false,actualTime:'',outcome:'',remarks:''},o);}
+function acked(c,d,t1,t2){c.fwd.protocol={sentAt:stamp(d,t1),ackAt:stamp(d,t2),ackBy:'Protocol Officer (duty)'};c.fwd.vip={sentAt:stamp(d,t1),ackAt:stamp(d,t2),ackBy:'VIP Lounge In-charge'};return c;}
+function done(m,actual,outcome){return Object.assign(m,{status:'Done',assigned:true,actualTime:actual||m.time,outcome:outcome||'Completed as scheduled'});}
+const L=(d,t,text)=>({at:stamp(d,t),by:'Duty Doctor',text});
+/* ---------- state ---------- */
+/* Data lives in Firebase (Firestore). LIVE holds protocols with a flight in the last 45 days or later
+   (kept in sync in real time); ARCH holds older months loaded on demand for the register and reports. */
+let S={cases:[],rules:defaultRules(),familyTier:3,logo:null};
+const LIVE=new Map(),ARCH=new Map(),FILES=new Map(),MONTHS=new Set();
+let pendingRender=false,unsubs=[];
+const LIVE_DAYS=45;
+function rebuild(){const m=new Map(ARCH);LIVE.forEach((v,k)=>m.set(k,v));S.cases=[...m.values()];}
+function prep(c){
+  const dates=c.movements.map(m=>m.date).filter(Boolean).sort();
+  c.dates=dates;c.months=[...new Set(dates.map(d=>d.slice(0,7)))];
+  c.firstDate=dates[0]||'';c.lastDate=dates[dates.length-1]||'';c.updatedAt=new Date().toISOString();
+  return JSON.parse(JSON.stringify(c));
+}
+function save(c){
+  if(!c||!canEdit())return;
+  LIVE.set(c.id,c);rebuild();
+  Backend.saveCase(prep(c)).catch(err=>{console.error(err);toast('Could not save. '+(err&&err.code==='permission-denied'?'You do not have permission.':'Check the internet connection.'));});
+}
+function saveSettings(){
+  if(!canEdit())return;
+  Backend.saveSettings({rules:S.rules,familyTier:S.familyTier,logo:S.logo||null}).catch(err=>{console.error(err);toast('Could not save settings.');});
+}
+function refreshSoon(){
+  const nav=currentNav();
+  if(!$('#modal').hidden||nav==='new'){pendingRender=true;return;}
+  if(nav==='register'&&$('#regTable')){$('#regTable').innerHTML=regTable();renderBoard();paintTabs(nav);return;}
+  render();
+}
+function needMonth(month){
+  if(!month||MONTHS.has(month))return;
+  if(month>addDays(-LIVE_DAYS).slice(0,7))return; // fully covered by the live sync
+  MONTHS.add(month);
+  Backend.loadMonth(month).then(list=>{list.forEach(c=>ARCH.set(c.id,c));rebuild();refreshSoon();}).catch(err=>{MONTHS.delete(month);console.error(err);toast('Could not load '+month+'.');});
+}
+function startData(){
+  unsubs.forEach(u=>{try{u();}catch(e){}});
+  unsubs=[
+    Backend.watchRecent(addDays(-LIVE_DAYS),list=>{LIVE.clear();list.forEach(c=>LIVE.set(c.id,c));rebuild();READY=true;refreshSoon();},err=>{console.error(err);READY=true;toast('Could not load protocols. Check the internet connection.');render();}),
+    Backend.watchSettings(d=>{S.rules=(d&&d.rules)||defaultRules();S.familyTier=(d&&d.familyTier)||3;S.logo=(d&&d.logo)||null;paintLogo();refreshSoon();})
+  ];
+}
+function stopData(){unsubs.forEach(u=>{try{u();}catch(e){}});unsubs=[];LIVE.clear();ARCH.clear();MONTHS.clear();FILES.clear();rebuild();READY=false;}
+const canEdit=()=>MODE==='doctor';
+const caseById=id=>S.cases.find(c=>c.id===id);
+const allMv=()=>S.cases.flatMap(c=>c.movements.map(m=>({c,m})));
+const rule=t=>(S.rules||defaultRules()).find(r=>r.tier===Number(t))||(S.rules||defaultRules())[2];
+const handlerOf=t=>rule(t).handler;
+const catName=t=>rule(t).name;
+function addLog(c,text){c.log.push({at:nowStamp(),by:'Duty Doctor',text});}
+
+/* ---------- category rules ---------- */
+function classify(designation,grade,beneficiary){
+  if(beneficiary==='Family/Guest')return {tier:Number(S.familyTier),reason:'Family member or guest of an official'};
+  const d=' '+String(designation||'').toLowerCase().replace(/[^a-z0-9\-]+/g,' ')+' ';
+  let best=null;
+  S.rules.forEach(r=>r.keywords.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean).forEach(k=>{
+    const re=new RegExp('[^a-z0-9]'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'[^a-z0-9]+')+'[^a-z0-9]');
+    if(re.test(d)&&(!best||k.length>best.k.length))best={k,tier:r.tier};
+  }));
+  let out=best?{tier:best.tier,reason:'Matched “'+best.k+'”'}:{tier:3,reason:'No rule matched, so Courtesy applies'};
+  const g=parseInt(grade,10);
+  if((g===1||g===2)&&out.tier>2)out={tier:2,reason:'Grade-'+g+' officer'};
+  return out;
+}
+
+/* ---------- status ---------- */
+function caseStage(c){
+  const p=c.fwd.protocol,v=c.fwd.vip;
+  if(!p.sentAt&&!v.sentAt)return 0;
+  if(!(p.ackAt&&v.ackAt))return 1;
+  const act=c.movements.filter(m=>m.status!=='Cancelled');
+  if(act.length&&act.every(m=>m.status==='Done'))return 3;
+  return 2;
+}
+const STAGES=['Registered','Forwarded','Signed copy received','Completed'];
+function mvStatus(m){
+  if(m.status==='Cancelled')return ['Cancelled','muted'];
+  if(m.status==='Done')return ['Completed','ok'];
+  if(dt(m)<Date.now())return ['Report pending','warn'];
+  if(!m.assigned)return ['Not assigned','warn'];
+  return ['Scheduled','info'];
+}
+const pill=([t,k])=>`<span class="pill ${k}">${esc(t)}</span>`;
+const catBadge=t=>`<span class="cat ${CATCLS[Number(t)]||'cour'}">${esc(catName(t))}</span>`;
+function attHtml(m){
+  if(m.status==='Cancelled')return '';
+  if(!m.assigned&&m.status==='Open')return `<span class="att none">${ICON.none}Needs ${WHO[m.attendBy]}</span>`;
+  return `<span class="att">${m.attendBy==='SI'?ICON.si:ICON.doc}${WHO[m.attendBy]}</span>`;
+}
+const isOpenFuture=m=>m.status==='Open'&&dt(m).getTime()>Date.now()-6*36e5;
+const needsContact=c=>!String(c.contact||'').trim()&&c.movements.some(isOpenFuture);
+const awaitingAck=c=>caseStage(c)<2&&c.movements.some(isOpenFuture);
+function actionItems(){
+  const now=Date.now(),items=[];
+  S.cases.forEach(c=>{
+    const live=c.movements.filter(isOpenFuture);
+    if(live.length){
+      const next=Math.min(...live.map(m=>dt(m).getTime()));
+      const urgent=(next-now)<=24*36e5,st=caseStage(c);
+      if(st===0)items.push({sev:urgent?'crit':'warn',c,text:'Forward letter to Protocol and VIP lounge sections',due:next});
+      else ['protocol','vip'].forEach(k=>{const f=c.fwd[k];if(f.sentAt&&!f.ackAt)items.push({sev:urgent?'crit':'warn',c,text:'Signed copy pending from '+SEC[k],due:next});});
+      if(needsContact(c))items.push({sev:urgent?'crit':'warn',c,text:'Add a contact number',due:next});
+      live.forEach(m=>{const h=(dt(m).getTime()-now)/36e5;if(!m.assigned&&h<=48)items.push({sev:h<=24?'crit':'warn',c,text:'Assign '+WHO[m.attendBy]+' for '+m.flight,due:dt(m).getTime()});});
+    }
+    c.movements.forEach(m=>{if(m.status==='Open'&&dt(m).getTime()<now)items.push({sev:'warn',c,text:'Record completion for '+m.flight,due:dt(m).getTime()});});
+  });
+  return items.sort((a,b)=>(a.sev===b.sev?0:(a.sev==='crit'?-1:1))||a.due-b.due);
+}
+
+/* ---------- fragments ---------- */
+function mvCard({c,m}){
+  const cls=CATCLS[Number(c.tier)];
+  return `<a class="mv ${cls}" href="#case-${c.id}">
+    <div class="chipboard"><b>${esc(m.time)}</b><span>${m.type==='Arrival'?'ARR':'DEP'}${m.scope==='Domestic'?' · DOM':''}</span></div>
+    <div><div class="fl"><span class="mono">${esc(m.flight)}</span><span class="rt">${esc(m.route)}</span></div>
+      <div class="nm">${esc(c.vipName)}${c.beneficiary==='Family/Guest'?' <span class="muted small" style="font-weight:500">(family / guests)</span>':''}</div>
+      <div class="ds">${esc(c.designation)}${c.org?', '+esc(c.org):''}</div>
+      ${needsContact(c)&&m.status==='Open'?'<div class="flag">No contact number</div>':''}</div>
+    <div class="side"><div class="row">${catBadge(c.tier)}${pill(mvStatus(m))}</div>${MODE==='si'?'':attHtml(m)}</div></a>`;
+}
+const DIRI={Arrival:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 9v9H9"/></svg>',Departure:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M9 6h9v9"/></svg>'};
+const dirBox=m=>`<span class="dir ${m.type==='Arrival'?'arr':'dep'}">${DIRI[m.type]}${m.type}</span>`;
+function grouped(list,emptyText){
+  if(!list.length)return `<div class="empty">${emptyText}</div>`;
+  let out='',last='';
+  list.forEach(x=>{if(x.m.date!==last){last=x.m.date;const n=list.filter(y=>y.m.date===last).length;out+=`<div class="daylabel${x.m.date===todayStr()?' istoday':''}"><span class="dl"><span class="dl-day">${x.m.date===todayStr()?'Today':x.m.date===tomorrowStr()?'Tomorrow':new Date(x.m.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long'})}</span><span class="dl-date">${dmy(x.m.date)}</span></span><span>${n} protocol${n===1?'':'s'}</span></div>`;}out+=mvCard(x);});
+  return out;
+}
+function fileThumb(c,key){
+  const f=c.files&&c.files[key];if(!f||!f.id)return '';
+  const isImg=/^image\//.test(f.type||'');
+  return `<button type="button" class="thumb" data-act="view-file" data-case="${c.id}" data-key="${key}"><span class="doc">${isImg?'IMG':'PDF'}</span><span>${esc(f.name)}</span></button>`;
+}
+/* Attachments are stored inside Firestore (collection "files") so the free Spark plan is enough.
+   Photos are shrunk to about 1600 px JPEG; PDFs must be under 700 KB (Firestore's limit is 1 MB per document). */
+function compressImage(file,maxDim,q){
+  return new Promise((res,rej)=>{
+    const img=new Image(),url=URL.createObjectURL(file);
+    img.onload=()=>{
+      let w=img.naturalWidth,h=img.naturalHeight;const k=Math.min(1,maxDim/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;const ctx=cv.getContext('2d');
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);URL.revokeObjectURL(url);
+      let d=cv.toDataURL('image/jpeg',q);if(d.length>850000)d=cv.toDataURL('image/jpeg',0.45);
+      if(d.length>950000)return rej(new Error('This photo is too large even after shrinking. Take it again at a lower resolution.'));
+      res(d);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('Could not read this image.'));};
+    img.src=url;
+  });
+}
+async function prepareFile(input,maxDim){
+  const f=input&&input.files&&input.files[0];if(!f)return null;
+  if(/^image\//.test(f.type))return {name:f.name.replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',data:await compressImage(f,maxDim||1600,0.7)};
+  if(f.type==='application/pdf'){
+    if(f.size>700*1024)throw new Error('This PDF is larger than 700 KB. Attach a photo of the letter instead, or compress the PDF.');
+    const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(new Error('Could not read the PDF.'));r.readAsDataURL(f);});
+    return {name:f.name,type:f.type,data};
+  }
+  throw new Error('Attach a photo or a PDF.');
+}
+async function storeFile(c,key,input){
+  const f=await prepareFile(input);if(!f)return null;
+  const r=Backend.putFile({caseId:c.id,key,name:f.name,type:f.type,data:f.data,at:nowStamp()});
+  r.done.catch(err=>{console.error(err);toast('Could not upload '+f.name+'.');});
+  FILES.set(r.id,f);c.files[key]={id:r.id,name:f.name,type:f.type};
+  return c.files[key];
+}
+const viewOnly='<div class="banner"><b>View only.</b> Sanitary Inspectors can see protocols. Doctors add and update them.</div>';
+
+/* ---------- board (next protocol) ---------- */
+let flapped=false;
+function cells(str,cls){return [...str].map(ch=>ch===' '?'<span class="c sep"></span>':`<span class="c${ch===':'?' sep':''}" data-f="${esc(ch)}">${esc(ch)}</span>`).join('');}
+function renderBoard(){
+  const now=Date.now();
+  let list=allMv().filter(x=>x.m.status==='Open'&&dt(x.m).getTime()>=now);
+  if(MODE==='si')list=list.filter(x=>x.m.assigned&&x.m.attendBy==='SI');
+  list.sort((a,b)=>dt(a.m)-dt(b.m));
+  const b=$('#board');const x=USER&&READY?list[0]:null;
+  if(!USER){b.removeAttribute('href');b.innerHTML=`<div class="bl"><span>Next protocol</span></div><div class="none">SIGN IN TO VIEW</div>`;return;}
+  if(!x){b.removeAttribute('href');b.innerHTML=`<div class="bl"><span>${MODE==='si'?'Next Sanitary Inspector duty':'Next protocol'}</span></div><div class="none">NO UPCOMING PROTOCOL</div>`;return;}
+  b.setAttribute('href','#case-'+x.c.id);
+  const route=x.m.route.replace(/\s*→\s*/,'-').replace(/\s/g,'').slice(0,7);
+  b.innerHTML=`<div class="bl"><span>${MODE==='si'?'Next Sanitary Inspector duty':'Next protocol'}</span><b>${x.m.date===todayStr()?'Today':x.m.date===tomorrowStr()?'Tomorrow':shortDate(x.m.date)} · ${rel(dt(x.m).getTime())}</b></div>
+    <div class="flaps">
+      <div class="flapgrp"><small>${x.m.type==='Arrival'?'ARRIVAL':'DEPARTURE'}</small><div class="cells">${cells(x.m.time)}</div></div>
+      <div class="flapgrp"><small>FLIGHT</small><div class="cells">${cells(x.m.flight.replace('-','').slice(0,6))}</div></div>
+      <div class="flapgrp"><small>ROUTE</small><div class="cells">${cells(route)}</div></div>
+    </div>
+    <div class="who">${catBadge(x.c.tier)}${esc(x.c.vipName)}<span class="dsg">${esc(x.c.designation)}</span></div>`;
+  if(!flapped){flapped=true;flap();}
+}
+function flap(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const pool='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  $$('#board .c[data-f]').forEach((el,i)=>{
+    const fin=el.dataset.f;if(fin===':')return;let n=0;const stop=6+i*2;
+    const iv=setInterval(()=>{n++;if(n>=stop){el.textContent=fin;clearInterval(iv);}else el.textContent=pool[(Math.random()*pool.length)|0];},45);
+  });
+}
+
+/* ---------- views ---------- */
+let dashF='week';
+function dashLists(){
+  const now=Date.now(),list=allMv(),T=todayStr(),M=tomorrowStr(),wk=addDays(6);
+  const live=x=>x.m.status!=='Cancelled';
+  const sort=a=>a.sort((p,q)=>dt(p.m)-dt(q.m));
+  return {
+    today:{k:'Schedule',l:'Protocols today',t:'Protocols today',items:sort(list.filter(x=>live(x)&&x.m.date===T))},
+    tomorrow:{k:'Schedule',l:'Protocols tomorrow',t:'Protocols tomorrow',items:sort(list.filter(x=>live(x)&&x.m.date===M))},
+    week:{k:'Schedule',l:'Protocols this week',t:'This week (today and the next 6 days)',items:sort(list.filter(x=>live(x)&&x.m.date>=T&&x.m.date<=wk))},
+    ack:{k:'Attention',l:'Letters awaiting signed copy',t:'Letters awaiting signed copy',alert:true,items:sort(list.filter(x=>isOpenFuture(x.m)&&awaitingAck(x.c))),count:S.cases.filter(awaitingAck).length},
+    contact:{k:'Attention',l:'Protocols need a contact number',t:'Protocols with no contact number',alert:true,items:sort(list.filter(x=>isOpenFuture(x.m)&&needsContact(x.c))),count:S.cases.filter(needsContact).length},
+    assign:{k:'Attention',l:'Need assigning today or tomorrow',t:'Not yet assigned, today or tomorrow',alert:true,items:sort(list.filter(x=>x.m.status==='Open'&&!x.m.assigned&&(x.m.date===T||x.m.date===M)&&dt(x.m).getTime()>now-6*36e5))},
+    done:{k:'Done',l:'Protocols completed today',t:'Completed today',good:true,items:sort(list.filter(x=>x.m.status==='Done'&&x.m.date===T))}
+  };
+}
+const OVI={
+  letter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  assign:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
+function weekStrip(pred){
+  const days=[0,1,2,3,4,5,6].map(i=>{const d=addDays(i);return {d,i,n:allMv().filter(x=>x.m.status!=='Cancelled'&&x.m.date===d&&pred(x)).length};});
+  const mx=Math.max(1,...days.map(x=>x.n));
+  return `<div class="week" aria-label="Protocols per day this week">${days.map(x=>`<div class="day${x.i===0?' today':''}${x.n?'':' zero'}"><span class="dn">${x.n}</span><span class="bar" style="height:${x.n?Math.max(14,Math.round(x.n/mx*100)):6}%"></span><span class="dd">${x.i===0?'Today':new Date(x.d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short'})}</span></div>`).join('')}</div>`;
+}
+function scheduleCard(eyebrow,stats,strip,clickable){
+  return `<section class="sched"><div class="schead"><span>${eyebrow}</span><span class="live"><i></i>${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} DAC</span></div>
+    <div class="stats">${stats.map(s=>clickable
+      ?`<button type="button" class="stat${s.hot?' hot':''}" data-dash="${s.key}" aria-pressed="${dashF===s.key}"><span class="n">${s.n}</span><span class="l">${s.l}</span></button>`
+      :`<div class="stat${s.hot?' hot':''}"><span class="n">${s.n}</span><span class="l">${s.l}</span></div>`).join('')}</div>
+    ${strip}</section>`;
+}
+function ringCard(done,total,clickable){
+  const C=2*Math.PI*52,p=total?done/total:0,left=total-done;
+  const inner=`<span class="eyebrow">Completed today</span>
+    <span class="ring"><svg viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="52" class="trk"/><circle cx="64" cy="64" r="52" class="prg" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${(C*(1-p)).toFixed(2)}"/></svg><span class="rv"><b>${done}</b><small>of ${total}</small></span></span>
+    <span class="rl">${total===0?'No protocols today':left===0?'All done for today':left+' still to go'}</span>`;
+  return clickable?`<button type="button" class="donecard" data-dash="done" aria-pressed="${dashF==='done'}">${inner}</button>`:`<div class="donecard">${inner}</div>`;
+}
+function vToday(){
+  if(MODE==='si')return vTodaySI();
+  const D=dashLists(),cur=D[dashF]||D.week,items=actionItems();
+  const attn=[['ack',OVI.letter,'Letters awaiting signed copy','Protocol or VIP lounge section has not signed'],['contact',OVI.phone,'Need a contact number','No PS / APS mobile on record'],['assign',OVI.assign,'Need assigning','Today or tomorrow, no Duty Doctor or SI set']];
+  const tot=attn.reduce((a,[k])=>a+(D[k].count!=null?D[k].count:D[k].items.length),0);
+  const todayAll=D.today.items;
+  return `
+  <div class="pagehead"><div><div class="eyebrow">${longDate(todayStr())}</div><h1 style="margin-top:8px">Today at Airport Health Office, HSIA</h1></div></div>
+  <div class="overview">
+    ${scheduleCard('Schedule',[{key:'today',n:D.today.items.length,l:'Today',hot:true},{key:'tomorrow',n:D.tomorrow.items.length,l:'Tomorrow'},{key:'week',n:D.week.items.length,l:'This week'}],weekStrip(()=>true),true)}
+    <section class="attn"><div class="attnhead"><span class="eyebrow">Needs attention</span><span class="tot ${tot?'':'clear'}">${tot?tot+' open':'All clear'}</span></div>
+      ${attn.map(([k,ic,t,sub])=>{const n=D[k].count!=null?D[k].count:D[k].items.length;
+        return `<button type="button" class="arow${n?'':' clear'}" data-dash="${k}" aria-pressed="${dashF===k}"><span class="ic">${n?ic:OVI.check}</span><span><span class="t">${t}</span><span class="s">${n?sub:'Nothing pending'}</span></span><span class="n">${n}</span></button>`;}).join('')}
+    </section>
+    ${ringCard(D.done.items.length,todayAll.length,true)}
+  </div>
+  <div class="split">
+    <section class="card flush"><div class="cardhead"><div class="listtitle"><h2>${esc(cur.t)}</h2><span class="muted small">${cur.items.length} protocol${cur.items.length===1?'':'s'}</span></div>${dashF!=='week'?'<button class="btn sm" data-dash="week">Show this week</button>':''}</div>
+      ${grouped(cur.items,'Nothing here.')}</section>
+    <section class="card flush"><div class="cardhead"><h2>Needs action</h2><span class="muted small">${items.length}</span></div>
+      ${items.length?items.map(i=>`<a class="act ${i.sev}" href="#case-${i.c.id}"><span class="dot"></span><div><div class="what">${esc(i.text)}</div><div class="ctx">${esc(i.c.vipName)} · ${esc(i.c.designation)}</div></div><span class="when">${rel(i.due)}</span></a>`).join(''):'<div class="empty">Nothing pending.</div>'}</section>
+  </div>`;
+}
+function vTodaySI(){
+  const T=todayStr(),M=tomorrowStr(),wk=addDays(6),all=allMv().filter(x=>x.m.status!=='Cancelled');
+  const isSI=x=>x.m.assigned&&x.m.attendBy==='SI';
+  const mine=all.filter(isSI);
+  const s=a=>a.sort((p,q)=>dt(p.m)-dt(q.m));
+  const t=s(mine.filter(x=>x.m.date===T)),tm=s(mine.filter(x=>x.m.date===M)),w=s(mine.filter(x=>x.m.date>=T&&x.m.date<=wk));
+  const allToday=s(all.filter(x=>x.m.date===T)),wAll=s(all.filter(x=>x.m.date>=T&&x.m.date<=wk));
+  return `
+  <div class="pagehead"><div><div class="eyebrow">${longDate(T)}</div><h1 style="margin-top:8px">Today at Airport Health Office, HSIA</h1></div></div>
+  ${viewOnly}
+  <div class="overview si">
+    ${scheduleCard('Sanitary Inspector duties',[{n:t.length,l:'Today',hot:true},{n:tm.length,l:'Tomorrow'},{n:w.length,l:'This week'}],weekStrip(isSI),false)}
+    ${ringCard(allToday.filter(x=>x.m.status==='Done').length,allToday.length,false)}
+  </div>
+  <div class="split">
+    <section class="card flush"><div class="cardhead"><h2>Protocols this week</h2><span class="muted small">${wAll.length}</span></div>${grouped(wAll,'No protocols this week.')}</section>
+    <section class="card flush"><div class="cardhead"><h2>All protocols today</h2><span class="muted small">${allToday.length}</span></div>${grouped(allToday,'No protocols today.')}</section>
+  </div>`;
+}
+
+let regF={month:todayStr().slice(0,7),q:'',type:'',cat:'',status:''};
+function regRows(){
+  const q=regF.q.trim().toLowerCase();
+  return allMv().filter(({c,m})=>{
+    if(regF.month&&!m.date.startsWith(regF.month))return false;
+    if(regF.type&&m.type!==regF.type)return false;
+    if(regF.cat&&String(c.tier)!==regF.cat)return false;
+    if(regF.status&&mvStatus(m)[0]!==regF.status)return false;
+    if(q&&![c.vipName,c.designation,c.org,m.flight,m.route].join(' ').toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>dt(a.m)-dt(b.m));
+}
+function vRegister(){
+  return `
+  <div class="pagehead"><div><div class="eyebrow">All arrivals and departures</div><h1 style="margin-top:8px">Protocol register</h1><p>Date order, with the same columns as the paper register.</p></div>
+    <button class="btn" data-act="copy-csv">Copy as CSV for Excel</button></div>
+  <div class="card"><form class="filters" onsubmit="return false">
+    <label class="f" for="rf-month">Month<input type="month" id="rf-month" value="${esc(regF.month)}"></label>
+    <label class="f" for="rf-q">Search<input type="search" id="rf-q" placeholder="Name, flight, office" value="${esc(regF.q)}"></label>
+    <label class="f" for="rf-cat">Category<select id="rf-cat"><option value="">All</option>${S.rules.map(r=>`<option value="${r.tier}"${regF.cat==String(r.tier)?' selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
+    <label class="f" for="rf-type">Arr / Dep<select id="rf-type"><option value="">All</option><option${regF.type==='Arrival'?' selected':''}>Arrival</option><option${regF.type==='Departure'?' selected':''}>Departure</option></select></label>
+    <label class="f" for="rf-status">Status<select id="rf-status"><option value="">All</option>${['Not assigned','Scheduled','Report pending','Completed','Cancelled'].map(s=>`<option${regF.status===s?' selected':''}>${s}</option>`).join('')}</select></label>
+  </form></div>
+  <div class="card flush" id="regTable">${regTable()}</div>`;
+}
+function regTable(){
+  const rows=regRows();let last='';
+  if(!rows.length)return '<div class="empty">No entries match these filters.</div>';
+  return `<div class="scroll"><table class="reg"><thead><tr><th>Date</th><th>Time</th><th>Arr / Dept</th><th>Flight</th><th>Name / Designation / Dept / Contact</th><th>Category</th>${MODE==='si'?'':'<th>Attended by</th>'}<th>Status</th></tr></thead><tbody>
+  ${rows.map(({c,m})=>{const nd=m.date!==last;last=m.date;
+    return `<tr class="${nd?'newday':''}" data-href="#case-${c.id}" tabindex="0">
+      <td class="date" data-label="Date">${nd?`<span class="dbox"><b>${dmy(m.date)}</b><small>${new Date(m.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short'})}</small></span>`:''}</td>
+      <td class="time" data-label="Time"><span class="tbox">${esc(m.time)}${m.status==='Done'&&m.actualTime&&m.actualTime!==m.time?`<small>Attended ${esc(m.actualTime)}</small>`:''}</span></td>
+      <td data-label="Arr / Dept">${dirBox(m)}${m.scope==='Domestic'?'<div><span class="dom">Domestic</span></div>':''}</td>
+      <td data-label="Flight" style="white-space:nowrap"><span class="mono" style="font-weight:700">${esc(m.flight)}</span><div class="small muted mono">${esc(m.route)}</div></td>
+      <td data-label="Name"><b>${esc(c.vipName)}</b>, ${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?'<div class="small muted">For: '+esc(c.guests||'family / guests')+'</div>':''}<div class="small ${c.contact?'muted':''}" ${c.contact?'':'style="color:var(--warn);font-weight:600"'}>${c.contact?esc(c.contact):'No contact number'}</div></td>
+      <td data-label="Category">${catBadge(c.tier)}</td>
+      ${MODE==='si'?'':`<td data-label="Attended by">${attHtml(m)||'<span class="muted">–</span>'}</td>`}
+      <td data-label="Status">${pill(mvStatus(m))}</td></tr>`;}).join('')}
+  </tbody></table></div>`;
+}
+function csv(){
+  const head=['Date','Time','Actual time','Arr/Dep','Scope','Flight','Route','Name','Designation','Office','Beneficiary','Contact','Category','Attended by','Status','Remarks'];
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  return [head.map(q).join(',')].concat(regRows().map(({c,m})=>[dmy(m.date),m.time,m.actualTime,m.type,m.scope,m.flight,m.route,c.vipName,c.designation,c.org,c.beneficiary==='Family/Guest'?c.guests:'Self',c.contact,catName(c.tier),m.assigned?WHO[m.attendBy]:'Not assigned',mvStatus(m)[0],m.remarks].map(q).join(','))).join('\n');
+}
+
+function mvRowHtml(){
+  const id=uid('r');
+  return `<div class="mvrow" data-row>
+    <label class="f" for="${id}a">Arr / Dep<select id="${id}a" name="type"><option>Arrival</option><option>Departure</option></select></label>
+    <label class="f" for="${id}b">Scope<select id="${id}b" name="scope"><option>International</option><option>Domestic</option></select></label>
+    <label class="f" for="${id}c">Date <span class="req">*</span><input id="${id}c" type="date" name="date" value="${todayStr()}"></label>
+    <label class="f" for="${id}d">Time <span class="req">*</span><input id="${id}d" type="time" name="time"></label>
+    <label class="f" for="${id}e">Flight <span class="req">*</span><input id="${id}e" name="flight" placeholder="QR-640"></label>
+    <label class="f" for="${id}f">Route<input id="${id}f" name="route" placeholder="DOH → DAC"></label>
+    <button type="button" class="btn sm danger rm" data-act="rm-row">Remove</button></div>`;
+}
+function vNew(){
+  return `
+  <div class="pagehead"><div><div class="eyebrow">Doctors only</div><h1 style="margin-top:8px">New protocol</h1><p>Enter who the protocol is for and the flights, and attach the letter. The category is set from the designation.</p></div></div>
+  <form id="newForm" class="card formsec" novalidate>
+    <div class="secno"><b>1</b>Protocol for</div>
+    <div class="fgrid">
+      <label class="f" for="f-name">Name of official <span class="req">*</span><input id="f-name"></label>
+      <label class="f" for="f-des">Designation <span class="req">*</span><input id="f-des" placeholder="Director General"></label>
+      <label class="f" for="f-org">Ministry / Directorate<input id="f-org"></label>
+      <label class="f" for="f-grade">Grade<select id="f-grade"><option value="">Not stated</option>${[1,2,3,4,5,6].map(g=>`<option value="${g}">Grade-${g}</option>`).join('')}</select></label>
+      <label class="f" for="f-ben">Protocol is for<select id="f-ben"><option value="Self">The official in person</option><option value="Family/Guest">Family members / guests of the official</option></select></label>
+      <label class="f" for="f-contact">Contact number<input id="f-contact" type="tel" placeholder="PS / APS mobile"></label>
+      <label class="f wide" for="f-guests">Accompanying persons / persons received<input id="f-guests" placeholder="e.g. son, daughter-in-law; daughter accompanying"></label>
+      <label class="f wide" for="f-veh">Vehicles for VIP terminal entry<input id="f-veh" placeholder="Dhaka Metro-Ga 00-0000; Dhaka Metro-Gha 00-0000"></label>
+    </div>
+    <div class="catbox" id="catBox"></div>
+    <div class="secno"><b>2</b>Flights</div>
+    <p class="small muted" style="margin:-6px 0 0">One letter can cover several flights, such as receiving on arrival and seeing off on departure.</p>
+    <div id="mvRows" class="formsec">${mvRowHtml()}</div>
+    <div><button type="button" class="btn sm" data-act="add-row">Add another flight</button></div>
+    <div class="secno"><b>3</b>Protocol letter</div>
+    <label class="f" for="f-scan">Attach the letter (photo or PDF)<input id="f-scan" type="file" accept="image/*,application/pdf"></label>
+    <div class="err" id="formErr" role="alert"></div>
+    <div class="btnrow"><button class="btn primary" type="submit">Save protocol</button><a class="btn" href="#today">Cancel</a></div>
+  </form>`;
+}
+function updateCatBox(){
+  const box=$('#catBox');if(!box)return;
+  const r=classify($('#f-des').value,$('#f-grade').value,$('#f-ben').value);const ru=rule(r.tier);
+  box.innerHTML=`${catBadge(r.tier)}<div><b>Attended by ${WHO[ru.handler]}</b><div class="small muted">${esc(r.reason)}. You can change the category after saving.</div></div>`;
+}
+
+function vCase(id){
+  const c=caseById(id),ed=canEdit();
+  if(!c){Backend.getCase(id).then(x=>{if(x){ARCH.set(x.id,x);rebuild();render();}else{const v=$('#view');if(v&&location.hash==='#case-'+id)v.innerHTML='<div class="card">This protocol was not found. <a href="#register">Back to the register</a></div>';}}).catch(()=>{});return '<div class="card empty">Loading…</div>';}
+  const st=caseStage(c),cls=CATCLS[Number(c.tier)];
+  const steps=STAGES.map((s,i)=>`<li class="${i<st||st===3?'done':i===st?'now':''}">${s}</li>`).join('');
+  const secRows=['protocol','vip'].map(k=>{const f=c.fwd[k];let state,act='';
+    if(f.ackAt)state=`<span class="pill ok">Signed copy received</span><div class="small muted" style="margin-top:4px">${esc(f.ackBy||'')} · ${esc(f.ackAt)}</div>`;
+    else if(f.sentAt){state=`<span class="pill warn">Awaiting signed copy</span><div class="small muted" style="margin-top:4px">Sent ${esc(f.sentAt)}</div>`;if(ed)act=`<button class="btn sm primary" data-act="ack" data-case="${c.id}" data-sec="${k}">Record signed copy</button>`;}
+    else state='<span class="pill muted">Not sent</span>';
+    const th=fileThumb(c,'ack_'+k);
+    return `<div class="secrow"><div><b>${SEC[k]}</b><div style="margin-top:6px">${state}</div>${th?'<div style="margin-top:8px">'+th+'</div>':''}</div><div>${act}</div></div>`;}).join('');
+  const rows=c.movements.slice().sort((a,b)=>dt(a)-dt(b)).map(m=>{
+    const open=m.status==='Open',btns=[];
+    if(open&&ed){
+      btns.push(`<button class="btn sm ${m.assigned?'':'primary'}" data-act="assign" data-case="${c.id}" data-mv="${m.id}">${m.assigned?'Change':'Assign'}</button>`);
+      if(m.assigned)btns.push(`<button class="btn sm ${dt(m)<Date.now()?'primary':''}" data-act="complete" data-case="${c.id}" data-mv="${m.id}">Record completion</button>`);
+      btns.push(`<button class="btn sm danger" data-act="cancel-mv" data-case="${c.id}" data-mv="${m.id}">Cancel</button>`);
+    }
+    return `<tr><td><div class="chipboard" style="display:inline-flex"><b>${esc(m.time)}</b><span>${dmy(m.date)}</span></div></td>
+      <td><span class="mono" style="font-weight:700">${esc(m.flight)}</span><div class="small muted mono">${esc(m.route)}</div><div class="small muted">${m.type}${m.scope==='Domestic'?' · Domestic':''}</div></td>
+      <td>${attHtml(m)||'<span class="muted">–</span>'}${m.status==='Done'?`<div class="small" style="margin-top:6px">Attended ${esc(m.actualTime)} · ${esc(m.outcome)}${m.remarks?'. '+esc(m.remarks):''}</div>`:''}${m.status==='Cancelled'&&m.remarks?`<div class="small muted">${esc(m.remarks)}</div>`:''}</td>
+      <td>${pill(mvStatus(m))}<div class="small muted" style="margin-top:6px">${open?rel(dt(m).getTime()):''}</div></td>
+      ${ed?`<td><div class="btnrow">${btns.join('')}</div></td>`:''}</tr>`;}).join('');
+  const letter=fileThumb(c,'letter');
+  return `
+  <div><a href="#register" class="small">← Register</a></div>
+  ${ed?'':viewOnly}
+  <section class="card casehead ${cls}">
+    <div class="pagehead"><div><div class="btnrow">${catBadge(c.tier)}<span class="small muted">${esc(c.tierReason)}</span></div>
+      <h1 style="margin-top:10px">${esc(c.vipName)}</h1><p>${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?' · protocol for family / guests':''}</p></div>
+      ${ed?`<div class="btnrow">${st===0?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward to both sections</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
+    <ol class="steps" aria-label="Progress">${steps}</ol>
+  </section>
+  <section class="card flush"><div class="cardhead"><h2>Flights</h2><span class="small muted">${esc(rule(c.tier).note)}</span></div>
+    <div class="scroll"><table class="mvtable"><thead><tr><th>Time</th><th>Flight</th><th>Attended by</th><th>Status</th>${ed?'<th></th>':''}</tr></thead><tbody>${rows}</tbody></table></div></section>
+  <div class="grid2">
+    <section class="card"><div class="cardhead"><h2>Protocol details</h2></div><dl class="kv">
+      <dt>Contact</dt><dd class="${c.contact?'':'missing'}">${esc(c.contact||'Not given')}</dd>
+      <dt>Grade</dt><dd>${c.grade?'Grade-'+esc(c.grade):'Not stated'}</dd>
+      <dt>Persons</dt><dd>${esc(c.guests||'–')}</dd>
+      <dt>Vehicles</dt><dd>${esc(c.vehicles||'–')}</dd></dl></section>
+    <section class="card"><div class="cardhead"><h2>Protocol letter</h2>${ed?`<button class="btn sm" data-act="attach" data-case="${c.id}">${letter?'Replace':'Attach letter'}</button>`:''}</div>
+      ${letter||'<p class="muted" style="margin:0">No letter attached.</p>'}</section>
+    <section class="card"><div class="cardhead"><h2>Forwarding and signed copies</h2></div>${secRows}</section>
+    <section class="card"><div class="cardhead"><h2>Activity log</h2></div><ul class="log">${c.log.slice().reverse().map(l=>`<li><time>${esc(l.at)}</time><span>${esc(l.text)}</span></li>`).join('')}</ul></section>
+  </div>`;
+}
+
+let repMonth=todayStr().slice(0,7);
+function bars(entries,clsFn){const mx=Math.max(1,...entries.map(x=>x[1]));
+  return entries.length?`<div class="bars">${entries.map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><span class="track"><span class="fill ${clsFn?clsFn(k):''}" style="width:${(v/mx*100).toFixed(1)}%"></span></span><span class="v">${v}</span></div>`).join('')}</div>`:'<div class="empty">No data for this month.</div>';}
+function vReports(){
+  const rows=allMv().filter(x=>x.m.date.startsWith(repMonth));
+  const cnt=(arr,f)=>Object.entries(arr.reduce((o,x)=>{const k=f(x);if(k!=null)o[k]=(o[k]||0)+1;return o;},{})).sort((a,b)=>b[1]-a[1]);
+  const doneR=rows.filter(x=>x.m.status==='Done');
+  const turn=[];new Set(rows.map(x=>x.c)).forEach(c=>['protocol','vip'].forEach(k=>{const f=c.fwd[k];if(f.sentAt&&f.ackAt)turn.push((parseStamp(f.ackAt)-parseStamp(f.sentAt))/36e5);}));
+  turn.sort((a,b)=>a-b);const med=turn.length?turn[Math.floor(turn.length/2)]:null;
+  const [y,mo]=repMonth.split('-');const label=new Date(+y,+mo-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  const byCat=S.rules.map(r=>[r.name,rows.filter(x=>Number(x.c.tier)===r.tier).length]);
+  const catCls=name=>{const r=S.rules.find(x=>x.name===name);return r?CATCLS[r.tier]:'';};
+  return `
+  <div class="pagehead"><div><div class="eyebrow">Monthly report</div><h1 style="margin-top:8px">${label}</h1><p>Counts are flights: one arrival or one departure.</p></div>
+    <label class="f" for="rep-month" style="min-width:180px">Month<input type="month" id="rep-month" value="${repMonth}"></label></div>
+  <section class="sched repsum"><div class="schead"><span>${label}</span></div>
+    <div class="stats"><div class="stat hot"><span class="n">${rows.length}</span><span class="l">Total protocols this month</span></div><div class="stat"><span class="n">${doneR.length}</span><span class="l">Completed</span></div></div>
+    <div class="meter" aria-hidden="true"><span style="width:${rows.length?Math.round(doneR.length/rows.length*100):0}%"></span></div>
+    <div class="cats">${S.rules.map(r=>`<span>${catBadge(r.tier)}<b>${rows.filter(x=>Number(x.c.tier)===r.tier).length}</b></span>`).join('')}</div></section>
+  <div class="grid2">
+    <section class="card"><div class="cardhead"><h2>By category</h2></div>${bars(byCat,catCls)}</section>
+    <section class="card"><div class="cardhead"><h2>Completed, by who attended</h2></div>${bars(cnt(doneR,x=>WHO[x.m.attendBy]))}</section>
+    <section class="card"><div class="cardhead"><h2>By office</h2></div>${bars(cnt(rows,x=>x.c.org||'Not stated'))}</section>
+    <section class="card"><div class="cardhead"><h2>By flight type</h2></div>${bars(cnt(rows,x=>x.m.scope+' '+x.m.type.toLowerCase()))}</section>
+  </div>`;
+}
+
+function vSettings(){
+  return `
+  <div class="pagehead"><div><div class="eyebrow">Doctors only</div><h1 style="margin-top:8px">Categories and settings</h1><p>The category decides who attends. The longest matching keyword in the designation wins, so “joint secretary” comes before “secretary”.</p></div></div>
+  <form id="rulesForm" class="formsec">
+  ${S.rules.map((r,i)=>`<section class="card formsec"><div class="cardhead">${catBadge(r.tier)}</div><div class="fgrid">
+    <label class="f" for="rh${i}">Attended by<select id="rh${i}" data-r="${i}" data-k="handler"><option value="Doctor"${r.handler==='Doctor'?' selected':''}>Duty Doctor</option><option value="SI"${r.handler==='SI'?' selected':''}>Sanitary Inspector</option></select></label>
+    <label class="f" for="rt${i}">Instruction shown to staff<input id="rt${i}" data-r="${i}" data-k="note" value="${esc(r.note)}"></label>
+    <label class="f wide" for="rk${i}">Designation keywords, comma separated<textarea id="rk${i}" data-r="${i}" data-k="keywords">${esc(r.keywords)}</textarea></label></div></section>`).join('')}
+  <section class="card formsec"><div class="fgrid">
+    <label class="f" for="r-fam">Family members and guests of officials are<select id="r-fam">${S.rules.map(r=>`<option value="${r.tier}"${Number(S.familyTier)===r.tier?' selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
+    <label class="f" for="r-test">Try a designation<input id="r-test" placeholder="e.g. Additional Secretary"></label></div>
+    <div id="r-testout" class="small muted">Grade-1 and Grade-2 officers are always at least VIP.</div>
+    <div class="btnrow"><button class="btn primary" type="submit">Save</button></div></section>
+  </form>
+  <section class="card"><div class="cardhead"><h2>Logo</h2></div><p class="small muted" style="margin:0 0 10px">Upload the HSIA logo. It is shown to everyone who uses the registry.</p>
+    <div class="btnrow"><input type="file" id="logoFile" accept="image/*" style="max-width:320px">${S.logo?'<button class="btn sm" data-act="logo-reset">Remove logo</button>':''}</div></section>
+`;
+}
+
+/* ---------- modals ---------- */
+function openModal(html,onMount){const b=$('#modalBody');b.innerHTML=html;$('#modal').hidden=false;if(onMount)onMount(b);const f=b.querySelector('input,select,textarea');if(f)f.focus();}
+function closeModal(){$('#modal').hidden=true;$('#modalBody').innerHTML='';if(pendingRender)setTimeout(render,0);}
+const mHead=(t,sub)=>`<div><h2 style="font-size:20px">${esc(t)}</h2>${sub?`<div class="small muted" style="margin-top:6px">${sub}</div>`:''}</div>`;
+const mBtns=(ok,cls)=>`<div class="btnrow"><button class="btn ${cls||'primary'}" type="submit">${esc(ok)}</button><button class="btn" type="button" data-act="close">Cancel</button></div>`;
+const whoLine=c=>esc(c.vipName+', '+c.designation);
+
+function mAssign(c,m){
+  openModal(`<form class="formsec" id="mf">${mHead('Assign '+m.flight,`${dmy(m.date)} at ${esc(m.time)} · ${esc(catName(c.tier))} is normally attended by the ${WHO[handlerOf(c.tier)]}`)}
+    <label class="f" for="a-who">Attended by<select id="a-who">${Object.entries(WHO).map(([k,v])=>`<option value="${k}"${m.attendBy===k?' selected':''}>${v}</option>`).join('')}</select></label>
+    ${mBtns(m.assigned?'Save':'Assign')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();const v=$('#a-who').value;const was=m.assigned;m.attendBy=v;m.assigned=true;
+      addLog(c,`${m.flight} ${was?'reassigned':'assigned'} to ${WHO[v]}`);save(c);closeModal();render();toast(m.flight+' assigned to '+WHO[v]);};});
+}
+function mComplete(c,m){
+  openModal(`<form class="formsec" id="mf">${mHead('Record completion · '+m.flight,`${esc(c.vipName)} · ${dmy(m.date)} ${esc(m.time)} · ${WHO[m.attendBy]}`)}
+    <div class="fgrid"><label class="f" for="c-time">Actual time<input id="c-time" type="time" value="${esc(m.time)}"></label>
+    <label class="f" for="c-out">Outcome<select id="c-out"><option>Completed as scheduled</option><option>Completed, flight delayed</option><option>Official did not travel</option><option>Received by another agency</option></select></label>
+    <label class="f wide" for="c-rem">Remarks<textarea id="c-rem" placeholder="Health screening, wheelchair, any issue at the VIP terminal"></textarea></label></div>
+    ${mBtns('Mark completed')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();m.status='Done';m.actualTime=$('#c-time').value||m.time;m.outcome=$('#c-out').value;m.remarks=$('#c-rem').value.trim();
+      addLog(c,`${m.flight} completed at ${m.actualTime} by ${WHO[m.attendBy]} (${m.outcome})`);save(c);closeModal();render();toast('Completion recorded');};});
+}
+function mCancel(c,m){
+  openModal(`<form class="formsec" id="mf">${mHead('Cancel '+m.flight+'?','The entry stays in the register marked as cancelled.')}
+    <label class="f" for="x-r">Reason<input id="x-r" placeholder="Travel postponed, per phone call from PS"></label>${mBtns('Cancel flight','danger')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();m.status='Cancelled';m.remarks=$('#x-r').value.trim();addLog(c,`${m.flight} cancelled${m.remarks?': '+m.remarks:''}`);save(c);closeModal();render();};});
+}
+function mForward(c){
+  openModal(`<form class="formsec" id="mf">${mHead('Forward the letter',whoLine(c))}
+    <label class="f" style="flex-direction:row;align-items:center;gap:10px;color:var(--ink)"><input type="checkbox" id="fw-p" checked style="width:auto"> Protocol section</label>
+    <label class="f" style="flex-direction:row;align-items:center;gap:10px;color:var(--ink)"><input type="checkbox" id="fw-v" checked style="width:auto"> VIP lounge section</label>
+    <p class="small muted" style="margin:0">Records the time the printed copy left the health office.</p>${mBtns('Mark as forwarded')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();const t=nowStamp(),sent=[];
+      if($('#fw-p').checked){c.fwd.protocol.sentAt=t;sent.push(SEC.protocol);}if($('#fw-v').checked){c.fwd.vip.sentAt=t;sent.push(SEC.vip);}
+      if(!sent.length)return;addLog(c,'Forwarded to '+sent.join(' and '));save(c);closeModal();render();toast('Forwarding recorded');};});
+}
+function mAck(c,k){
+  openModal(`<form class="formsec" id="mf">${mHead('Signed copy · '+SEC[k],whoLine(c))}
+    <div class="fgrid"><label class="f" for="k-by">Received by (name, designation)<input id="k-by" placeholder="Protocol Officer (duty)"></label>
+    <label class="f" for="k-at">Received at<input id="k-at" type="datetime-local" value="${nowStamp().replace(' ','T')}"></label>
+    <label class="f wide" for="k-file">Photo of the signed copy<input id="k-file" type="file" accept="image/*,application/pdf"></label></div>
+    <div class="err" id="k-err"></div>${mBtns('Save')}</form>`,b=>{
+    $('#mf',b).onsubmit=async e=>{e.preventDefault();const by=$('#k-by').value.trim();if(!by){$('#k-err').textContent='Enter who signed the received copy.';return;}
+      try{await storeFile(c,'ack_'+k,$('#k-file'));}catch(er){$('#k-err').textContent=er.message;return;}
+      c.fwd[k].ackBy=by;c.fwd[k].ackAt=($('#k-at').value||nowStamp()).replace('T',' ').slice(0,16);
+      addLog(c,'Signed copy filed from '+SEC[k]+' ('+by+')');save(c);closeModal();render();toast('Signed copy recorded');};});
+}
+function mAttach(c){
+  openModal(`<form class="formsec" id="mf">${mHead('Attach protocol letter',whoLine(c))}
+    <label class="f" for="l-file">Photo or PDF of the letter<input id="l-file" type="file" accept="image/*,application/pdf"></label>
+    <div class="err" id="l-err"></div>${mBtns('Attach')}</form>`,b=>{
+    $('#mf',b).onsubmit=async e=>{e.preventDefault();if(!($('#l-file').files||[]).length){$('#l-err').textContent='Choose a file first.';return;}
+      const had=!!(c.files.letter&&c.files.letter.id);let f;try{f=await storeFile(c,'letter',$('#l-file'));}catch(er){$('#l-err').textContent=er.message;return;}addLog(c,(had?'Protocol letter replaced: ':'Protocol letter attached: ')+f.name);save(c);closeModal();render();toast('Letter attached');};});
+}
+function mEdit(c){
+  openModal(`<form class="formsec" id="mf">${mHead('Edit protocol details')}
+    <div class="fgrid">
+      <label class="f" for="e-name">Name<input id="e-name" value="${esc(c.vipName)}"></label>
+      <label class="f" for="e-des">Designation<input id="e-des" value="${esc(c.designation)}"></label>
+      <label class="f" for="e-org">Ministry / Directorate<input id="e-org" value="${esc(c.org)}"></label>
+      <label class="f" for="e-contact">Contact number<input id="e-contact" type="tel" value="${esc(c.contact)}"></label>
+      <label class="f wide" for="e-guests">Accompanying persons<input id="e-guests" value="${esc(c.guests)}"></label>
+      <label class="f wide" for="e-veh">Vehicles<input id="e-veh" value="${esc(c.vehicles)}"></label></div>
+    <div class="err" id="e-err"></div>${mBtns('Save changes')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();const g=id=>$(id).value.trim();if(!g('#e-name')||!g('#e-des')){$('#e-err').textContent='Name and designation are needed.';return;}
+      const hadContact=!!c.contact;
+      Object.assign(c,{vipName:g('#e-name'),designation:g('#e-des'),org:g('#e-org'),contact:g('#e-contact'),guests:g('#e-guests'),vehicles:g('#e-veh')});
+      addLog(c,!hadContact&&c.contact?'Contact number added':'Protocol details edited');save(c);closeModal();render();toast('Details saved');};});
+  if(!c.contact)setTimeout(()=>{const x=$('#e-contact');if(x)x.focus();},0);
+}
+function mRecat(c){
+  openModal(`<form class="formsec" id="mf">${mHead('Change category','Now: '+esc(catName(c.tier))+'. '+esc(c.tierReason))}
+    <label class="f" for="t-new">New category<select id="t-new">${S.rules.map(r=>`<option value="${r.tier}"${r.tier==c.tier?' selected':''}>${esc(r.name)}, attended by ${WHO[r.handler]}</option>`).join('')}</select></label>
+    <label class="f" for="t-why">Reason <span class="req">*</span><input id="t-why" placeholder="Instruction from Chief Airport Health Officer"></label><div class="err" id="t-err"></div>${mBtns('Change category')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();const why=$('#t-why').value.trim();if(!why){$('#t-err').textContent='Give a reason. It is kept in the activity log.';return;}
+      const nt=Number($('#t-new').value);addLog(c,`Category changed from ${catName(c.tier)} to ${catName(nt)}: ${why}`);c.tier=nt;c.tierReason='Set manually: '+why;
+      c.movements.forEach(m=>{if(m.status==='Open'&&!m.assigned)m.attendBy=handlerOf(nt);});save(c);closeModal();render();};});
+}
+async function mFile(c,key){
+  const meta=c&&c.files[key];if(!meta)return;
+  openModal(`${mHead(meta.name)}<p class="muted" id="fileBody" style="margin:0">Loading…</p><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`);
+  try{
+    let f=FILES.get(meta.id);if(!f){f=await Backend.getFile(meta.id);if(f)FILES.set(meta.id,f);}
+    const body=$('#fileBody');if(!body)return;
+    if(!f)throw new Error('missing');
+    if(/^image\//.test(f.type))body.outerHTML=`<img class="full" src="${f.data}" alt="${esc(meta.name)}">`;
+    else{const blob=await (await fetch(f.data)).blob();const u=URL.createObjectURL(blob);body.outerHTML=`<a class="btn primary" href="${u}" target="_blank" rel="noopener">Open PDF</a>`;}
+  }catch(err){const b=$('#fileBody');if(b)b.textContent='Could not load this file. Check the internet connection and try again.';}
+}
+
+/* ---------- sign in ---------- */
+let loginRole='doctor';
+function vLogin(){
+  return `<section class="card login"><div><div class="eyebrow">Airport Health Office</div><h1 style="margin-top:8px">Sign in</h1><p class="muted" style="margin:6px 0 0">Choose your role and enter the office password.</p></div>
+    <form id="loginForm" class="formsec" novalidate>
+      <div class="rolepick" role="group" aria-label="Role">
+        <button type="button" data-role="doctor" aria-pressed="${loginRole==='doctor'}"><b>Doctor</b><small>Chief Airport Health Officer and doctors · full access</small></button>
+        <button type="button" data-role="si" aria-pressed="${loginRole==='si'}"><b>Sanitary Inspector</b><small>View only</small></button>
+      </div>
+      <label class="f" for="pw">Password<input id="pw" type="password" autocomplete="current-password"></label>
+      <div class="err" id="loginErr" role="alert"></div>
+      <button class="btn primary" type="submit" id="loginBtn">Sign in</button>
+    </form></section>`;
+}
+const LOGO_PH=$('#logo')?$('#logo').innerHTML:'';
+function paintLogo(){const el=$('#logo');if(!el)return;el.innerHTML=S.logo?`<img src="${S.logo}" alt="HSIA logo">`:LOGO_PH;}
+function applyMode(){
+  const ed=$('.edition');if(!ed)return;
+  ed.hidden=MODE!=='si';$('#editionName').textContent='Sanitary Inspectors · view only';
+}
+
+/* ---------- render + routing ---------- */
+const VIEWS={today:vToday,register:vRegister,reports:vReports,settings:vSettings,new:vNew};
+const tabsFor=()=>MODE==='doctor'
+  ?[['today','Today'],['register','Register'],['reports','Reports'],['settings','Settings']]
+  :[['today','Today'],['register','Register']];
+function currentNav(){const h=(location.hash||'#today').slice(1);if(h.startsWith('case-'))return 'register';return (VIEWS[h]&&(canEdit()||['today','register'].includes(h)))?h:'today';}
+function paintTabs(nav){
+  if(!USER){$('#tabs').innerHTML='<a aria-current="page">Sign in</a>';return;}
+  const crit=canEdit()&&READY?actionItems().filter(i=>i.sev==='crit').length:0;
+  $('#tabs').innerHTML=tabsFor().map(([k,l])=>`<a href="#${k}" aria-current="${nav===k?'page':'false'}">${l}${k==='today'&&crit?` <span class="count">${crit}</span>`:''}</a>`).join('')
+    +(canEdit()?`<a class="cta" href="#new" aria-current="${nav==='new'?'page':'false'}">+ New protocol</a>`:'')
+    +`<button type="button" class="signout${canEdit()?'':' push'}" data-act="signout">Sign out</button>`;
+}
+function render(){
+  pendingRender=false;
+  if(!USER){$('#view').innerHTML=vLogin();paintTabs('');renderBoard();return;}
+  if(!READY){$('#view').innerHTML='<div class="card empty">Loading protocols…</div>';paintTabs(currentNav());renderBoard();return;}
+  const h=(location.hash||'#today').slice(1);
+  const nav=currentNav();
+  if(nav==='register')needMonth(regF.month);
+  if(nav==='reports')needMonth(repMonth);
+  $('#view').innerHTML=h.startsWith('case-')?vCase(h.slice(5)):VIEWS[nav]();
+  paintTabs(nav);
+  renderBoard();
+  if(nav==='new'){['#f-des','#f-grade','#f-ben'].forEach(s=>$(s).addEventListener('input',updateCatBox));updateCatBox();}
+}
+window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  const tr=e.target.closest('tr[data-href]');if(tr&&!e.target.closest('a,button')){location.hash=tr.dataset.href;return;}
+  const rp=e.target.closest('[data-role]');if(rp){loginRole=rp.dataset.role;$$('[data-role]').forEach(x=>x.setAttribute('aria-pressed',x===rp?'true':'false'));const pw=$('#pw');if(pw)pw.focus();return;}
+  const dk=e.target.closest('[data-dash]');if(dk){dashF=dk.dataset.dash;render();return;}
+  const el=e.target.closest('[data-act]');
+  if(!el){if(e.target.id==='modal')closeModal();return;}
+  const a=el.dataset.act,c=el.dataset.case&&caseById(el.dataset.case),m=c&&el.dataset.mv&&c.movements.find(x=>x.id===el.dataset.mv);
+  if(a==='close'){closeModal();return;}
+  if(a==='signout'){stopData();Backend.signOut();return;}
+  if(a==='view-file'){mFile(c,el.dataset.key);return;}
+  if(a==='copy-csv'){const t=csv();try{await navigator.clipboard.writeText(t);toast('Copied '+regRows().length+' rows. Paste into Excel.');}
+    catch(err){openModal(`${mHead('Copy the register','Select all and copy, then paste into Excel.')}<textarea style="min-height:220px" class="mono small" readonly>${esc(t)}</textarea><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`,b=>{const ta=$('textarea',b);ta.focus();ta.select();});}
+    return;}
+  if(!canEdit())return;
+  if(a==='assign')mAssign(c,m);
+  else if(a==='complete')mComplete(c,m);
+  else if(a==='cancel-mv')mCancel(c,m);
+  else if(a==='forward')mForward(c);
+  else if(a==='ack')mAck(c,el.dataset.sec);
+  else if(a==='attach')mAttach(c);
+  else if(a==='edit')mEdit(c);
+  else if(a==='recat')mRecat(c);
+  else if(a==='add-row')$('#mvRows').insertAdjacentHTML('beforeend',mvRowHtml());
+  else if(a==='rm-row'){if($$('[data-row]').length>1)el.closest('[data-row]').remove();else toast('A protocol needs at least one flight');}
+  else if(a==='logo-reset'){S.logo=null;saveSettings();paintLogo();render();}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!$('#modal').hidden)closeModal();
+  if(e.key==='Enter'&&e.target.matches('tr[data-href]'))location.hash=e.target.dataset.href;
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='rf-q'){regF.q=t.value;$('#regTable').innerHTML=regTable();}
+  if(t.id==='r-test'){const r=classify(t.value,'','Self');$('#r-testout').innerHTML=t.value?`${catBadge(r.tier)} <span style="margin-left:6px">${esc(r.reason)}. Attended by ${WHO[rule(r.tier).handler]}.</span>`:'Grade-1 and Grade-2 officers are always at least VIP.';}
+});
+document.addEventListener('change',async e=>{
+  const t=e.target;
+  if(['rf-month','rf-type','rf-status','rf-cat'].includes(t.id)){regF[t.id.slice(3)]=t.value;if(t.id==='rf-month')needMonth(t.value);$('#regTable').innerHTML=regTable();}
+  else if(t.id==='rep-month'){repMonth=t.value||repMonth;render();}
+  else if(t.id==='logoFile'&&canEdit()){try{const f=await prepareFile(t,360);if(f&&/^image\//.test(f.type)){S.logo=f.data;saveSettings();paintLogo();render();toast('Logo updated for everyone');}else toast('Choose an image file.');}catch(er){toast(er.message);}}
+});
+document.addEventListener('submit',async e=>{
+  const f=e.target;
+  if(f.id==='newForm'){
+    e.preventDefault();if(!canEdit())return;const err=$('#formErr');const v=id=>$(id).value.trim();
+    const rows=$$('[data-row]').map(r=>({type:$('[name=type]',r).value,scope:$('[name=scope]',r).value,date:$('[name=date]',r).value,time:$('[name=time]',r).value,flight:$('[name=flight]',r).value.trim().toUpperCase(),route:$('[name=route]',r).value.trim()}));
+    const miss=[];if(!v('#f-name'))miss.push('name');if(!v('#f-des'))miss.push('designation');
+    if(rows.some(r=>!r.date||!r.time||!r.flight))miss.push('date, time and flight for every flight row');
+    if(miss.length){err.textContent='Fill in: '+miss.join(', ')+'.';return;}
+    const cl=classify(v('#f-des'),v('#f-grade'),$('#f-ben').value);
+    const c=mk({vipName:v('#f-name'),designation:v('#f-des'),org:v('#f-org'),grade:v('#f-grade'),beneficiary:$('#f-ben').value,guests:v('#f-guests'),contact:v('#f-contact'),vehicles:v('#f-veh'),
+      tier:cl.tier,tierReason:cl.reason,movements:rows.map(r=>mv(Object.assign(r,{attendBy:handlerOf(cl.tier)})))});
+    const btn=f.querySelector('button[type=submit]');btn.disabled=true;
+    let scan=null;try{scan=await storeFile(c,'letter',$('#f-scan'));}catch(er){err.textContent=er.message;btn.disabled=false;return;}
+    addLog(c,'Protocol registered as '+catName(cl.tier));
+    if(scan)addLog(c,'Protocol letter attached: '+scan.name);
+    save(c);location.hash='case-'+c.id;toast('Protocol saved. Next: forward the letter and assign.');
+  }
+  else if(f.id==='loginForm'){
+    e.preventDefault();const pw=$('#pw').value;const er=$('#loginErr');const btn=$('#loginBtn');
+    if(!pw){er.textContent='Enter the password.';return;}
+    btn.disabled=true;btn.textContent='Signing in…';er.textContent='';
+    Backend.signIn(loginRole,pw).catch(x=>{btn.disabled=false;btn.textContent='Sign in';
+      er.textContent=(x&&/invalid-credential|wrong-password|user-not-found|invalid-login/.test(x.code||''))?'Wrong password for '+(loginRole==='doctor'?'Doctor':'Sanitary Inspector')+'. Try again.':(x&&x.code==='auth/too-many-requests')?'Too many attempts. Wait a few minutes and try again.':'Could not sign in. Check the internet connection.';});
+  }
+  else if(f.id==='rulesForm'){
+    e.preventDefault();if(!canEdit())return;S.rules=JSON.parse(JSON.stringify(S.rules||defaultRules()));$$('[data-r]',f).forEach(i=>{S.rules[+i.dataset.r][i.dataset.k]=i.value;});S.familyTier=Number($('#r-fam').value);saveSettings();render();toast('Settings saved for everyone');
+  }
+});
+
+function boot(){
+  render();
+  Backend.onAuth(u=>{
+    if(u&&!u.role){Backend.signOut();toast('This account is not set up for the registry.');return;}
+    USER=u;MODE=u?u.role:null;applyMode();
+    if(u){READY=false;startData();}else stopData();
+    render();
+  });
+}
+if(window.Backend)boot();else window.addEventListener('backend-ready',boot,{once:true});
+window.addEventListener('backend-failed',()=>{$('#view').innerHTML='<div class="card"><h2>Could not connect</h2><p class="muted">The registry could not reach Firebase. Check the internet connection, and check that firebase-config.js has the settings from your Firebase project.</p></div>';});
+</script>
+<script>
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
