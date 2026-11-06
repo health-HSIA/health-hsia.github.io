@@ -339,6 +339,18 @@ table.reg td,table.reg td.date,table.reg td.time,table.reg td.tickcell{vertical-
 .statbtn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 10px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--accent);font:700 12px/1 var(--body);text-decoration:none;white-space:nowrap}
 .statbtn svg{width:14px;height:14px}
 .statbtn:hover{border-color:var(--accent)}
+/* v10: larger tap targets on phones and small tablets */
+@media (max-width:820px),(pointer:coarse){
+  .tick,.callbtn{width:44px;height:44px;border-radius:12px}
+  .tick svg{width:22px;height:22px}
+  .callbtn svg{width:19px;height:19px}
+  .statbtn{height:44px;padding:0 13px;font-size:13px;border-radius:12px}
+  .statbtn svg{width:16px;height:16px}
+  .btn.sm{min-height:42px;padding:9px 13px;font-size:13.5px}
+  .chipf{padding:10px 14px;font-size:13.5px}
+  .mv .side .row,.vsa{gap:8px}
+  a.tel{padding:6px 0}
+}
 /* ---------- category & status ---------- */
 .cat{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--display);font-stretch:115%;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px 5px 8px;border-radius:6px;color:var(--cat-ink);white-space:nowrap}
 .cat::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
@@ -516,7 +528,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:v
 <div class="wrap tabsbar"><nav class="tabs" id="tabs" aria-label="Sections"></nav></div>
 <div class="wrap printhead" aria-hidden="true">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · Printed <span id="printdate"></span></div>
 <main class="wrap" id="view"></main>
-<footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · <b>Version 8 (6 Nov 2026)</b></footer>
+<footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · <b>Version 10 (6 Nov 2026)</b></footer>
 <div id="modal" class="modal" hidden><div class="sheet" role="dialog" aria-modal="true" id="modalBody"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="firebase-config.js"></script>
@@ -574,7 +586,9 @@ let seq=100;
 const uid=p=>p+Date.now().toString(36)+(++seq).toString(36)+Math.random().toString(36).slice(2,8);
 function rel(ms){const h=(ms-Date.now())/36e5;const a=Math.abs(h);let t;if(a<1)t=Math.max(1,Math.round(a*60))+' min';else if(a<48)t=Math.round(a)+' h';else t=Math.round(a/24)+' d';return h>=0?'in '+t:t+' ago';}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2600);}
-const SEC={protocol:'Protocol section',vip:'VIP lounge section'};
+const SEC={protocol:'Protocol / VIP lounge section'};
+/* One combined section. Older records may hold the acknowledgement under fwd.vip; read either. */
+function fwdOf(c){const p=(c.fwd&&c.fwd.protocol)||{},v=(c.fwd&&c.fwd.vip)||{};return {sentAt:p.sentAt||v.sentAt||'',ackAt:p.ackAt||v.ackAt||'',ackBy:p.ackBy||v.ackBy||''};}
 const WHO={Doctor:'Duty Doctor',SI:'Sanitary Inspector'};
 const CATCLS={1:'vvip',2:'vip',3:'cour'};
 const ICON={
@@ -741,9 +755,9 @@ const mvCmp=(a,b)=>(dt(a.m)-dt(b.m))||(Number(a.c.tier)-Number(b.c.tier))||(RANK
 
 /* ---------- status ---------- */
 function caseStage(c){
-  const p=c.fwd.protocol,v=c.fwd.vip;
-  if(!p.sentAt&&!v.sentAt)return 0;
-  if(!(p.ackAt&&v.ackAt))return 1;
+  const f=fwdOf(c);
+  if(!f.sentAt)return 0;
+  if(!f.ackAt)return 1;
   const act=c.movements.filter(m=>m.status!=='Cancelled');
   if(act.length&&act.every(m=>m.status==='Done'))return 3;
   return 2;
@@ -773,8 +787,8 @@ function actionItems(){
     if(live.length){
       const next=Math.min(...live.map(m=>dt(m).getTime()));
       const urgent=(next-now)<=24*36e5,st=caseStage(c);
-      if(st===0)items.push({sev:urgent?'crit':'warn',c,text:'Forward letter to Protocol and VIP lounge sections',due:next});
-      else ['protocol','vip'].forEach(k=>{const f=c.fwd[k];if(f.sentAt&&!f.ackAt)items.push({sev:urgent?'crit':'warn',c,text:'Signed copy pending from '+SEC[k],due:next});});
+      if(st===0)items.push({sev:urgent?'crit':'warn',c,text:'Forward the letter to the Protocol / VIP lounge section',due:next});
+      else{const f=fwdOf(c);if(f.sentAt&&!f.ackAt)items.push({sev:urgent?'crit':'warn',c,text:'Signed copy pending from the Protocol / VIP lounge section',due:next});}
       if(needsContact(c))items.push({sev:urgent?'crit':'warn',c,text:'Add a contact number',due:next});
       live.forEach(m=>{const h=(dt(m).getTime()-now)/36e5;if(!m.assigned&&h<=48)items.push({sev:h<=24?'crit':'warn',c,text:'Assign '+WHO[m.attendBy]+' for '+m.flight,due:dt(m).getTime()});});
     }
@@ -951,7 +965,7 @@ function vToday(){
   const D=dashLists(),cur0=D[dashF]||D.week,items=actionItems();
   const cur=Object.assign({},cur0,{items:dashCat?cur0.items.filter(x=>String(x.c.tier)===dashCat):cur0.items});
   const chips=`<div class="chips" role="group" aria-label="Filter by category"><button type="button" class="chipf" data-catf="" aria-pressed="${!dashCat}">All</button>${S.rules.map(r=>`<button type="button" class="chipf ${CATCLS[r.tier]}" data-catf="${r.tier}" aria-pressed="${dashCat===String(r.tier)}">${esc(r.name)}</button>`).join('')}</div>`;
-  const attn=[['ack',OVI.letter,'Letters awaiting signed copy','Protocol or VIP lounge section has not signed'],['contact',OVI.phone,'Need a contact number','No PS / APS mobile on record'],['assign',OVI.assign,'Need assigning','Today or tomorrow, no Duty Doctor or SI set']];
+  const attn=[['ack',OVI.letter,'Letters awaiting signed copy','Protocol / VIP lounge section has not signed'],['contact',OVI.phone,'Need a contact number','No PS / APS mobile on record'],['assign',OVI.assign,'Need assigning','Today or tomorrow, no Duty Doctor or SI set']];
   const tot=attn.reduce((a,[k])=>a+(D[k].count!=null?D[k].count:D[k].items.length),0);
   const todayAll=D.today.items;
   return `
@@ -1118,11 +1132,11 @@ function vCase(id){
   if(!c){Backend.getCase(id).then(x=>{if(x){ARCH.set(x.id,x);rebuild();render();}else{const v=$('#view');if(v&&location.hash==='#case-'+id)v.innerHTML='<div class="card">This protocol was not found. <a href="#register">Back to the register</a></div>';}}).catch(()=>{});return '<div class="card empty">Loading…</div>';}
   const st=caseStage(c),cls=CATCLS[Number(c.tier)];
   const steps=STAGES.map((s,i)=>`<li class="${i<st||st===3?'done':i===st?'now':''}">${s}</li>`).join('');
-  const secRows=['protocol','vip'].map(k=>{const f=c.fwd[k];let state,act='';
+  const secRows=['protocol'].map(k=>{const f=fwdOf(c);let state,act='';
     if(f.ackAt)state=`<span class="pill ok">Signed copy received</span><div class="small muted" style="margin-top:4px">${esc(f.ackBy||'')} · ${esc(f.ackAt)}</div>`;
     else if(f.sentAt){state=`<span class="pill warn">Awaiting signed copy</span><div class="small muted" style="margin-top:4px">Sent ${esc(f.sentAt)}</div>`;if(ed)act=`<button class="btn sm primary" data-act="ack" data-case="${c.id}" data-sec="${k}">Record signed copy</button>`;}
     else state='<span class="pill muted">Not sent</span>';
-    const th=fileThumb(c,'ack_'+k);
+    const th=fileThumb(c,'ack_protocol')||fileThumb(c,'ack_vip');
     return `<div class="secrow"><div><b>${SEC[k]}</b><div style="margin-top:6px">${state}</div>${th?'<div style="margin-top:8px">'+th+'</div>':''}</div><div>${act}</div></div>`;}).join('');
   const rows=c.movements.slice().sort((a,b)=>dt(a)-dt(b)).map(m=>{
     const open=m.status==='Open',btns=[];if(m.status!=='Cancelled'&&ed)btns.push(tickBtn(c,m));
@@ -1144,7 +1158,7 @@ function vCase(id){
   <section class="card casehead ${cls}">
     <div class="pagehead"><div><div class="btnrow">${catBadge(c.tier)}<span class="small muted">${esc(c.tierReason)}</span></div>
       <h1 style="margin-top:10px">${esc(c.vipName)}</h1><p>${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?' · protocol for family / guests':''}</p></div>
-      ${ed?`<div class="btnrow">${st===0?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward to both sections</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
+      ${ed?`<div class="btnrow">${st===0?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward letter</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
     <ol class="steps" aria-label="Progress">${steps}</ol>
   </section>
   <section class="card flush"><div class="cardhead"><div><h2>Flights</h2><span class="small muted">${esc(rule(c.tier).note)}</span></div>${ed?`<button class="btn sm" data-act="add-mv" data-case="${c.id}">+ Add flight</button>`:''}</div>
@@ -1169,7 +1183,7 @@ function vReports(){
   const rows=allMv().filter(x=>x.m.date.startsWith(repMonth));
   const cnt=(arr,f)=>Object.entries(arr.reduce((o,x)=>{const k=f(x);if(k!=null)o[k]=(o[k]||0)+1;return o;},{})).sort((a,b)=>b[1]-a[1]);
   const doneR=rows.filter(x=>x.m.status==='Done');
-  const turn=[];new Set(rows.map(x=>x.c)).forEach(c=>['protocol','vip'].forEach(k=>{const f=c.fwd[k];if(f.sentAt&&f.ackAt)turn.push((parseStamp(f.ackAt)-parseStamp(f.sentAt))/36e5);}));
+  const turn=[];new Set(rows.map(x=>x.c)).forEach(c=>{const f=fwdOf(c);if(f.sentAt&&f.ackAt)turn.push((parseStamp(f.ackAt)-parseStamp(f.sentAt))/36e5);});
   turn.sort((a,b)=>a-b);const med=turn.length?turn[Math.floor(turn.length/2)]:null;
   const [y,mo]=repMonth.split('-');const label=new Date(+y,+mo-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
   const byCat=S.rules.map(r=>[r.name,rows.filter(x=>Number(x.c.tier)===r.tier).length]);
@@ -1208,7 +1222,7 @@ function vSettings(){
   <section class="card"><div class="cardhead"><h2>On this phone or tablet</h2></div><div class="fgrid">
     <label class="f" for="set-idle">Sign out automatically after<select id="set-idle">${[[15,'15 minutes'],[30,'30 minutes'],[60,'1 hour'],[120,'2 hours'],[480,'8 hours (one shift)']].map(([v,l])=>`<option value="${v}"${idleMins()===v?' selected':''}>${l} without use</option>`).join('')}</select></label>
     <label class="f" for="set-text">Text size<select id="set-text">${[['1','Normal'],['1.12','Large'],['1.25','Extra large']].map(([v,l])=>`<option value="${v}"${String(textZoom())===v?' selected':''}>${l}</option>`).join('')}</select></label></div>
-    <p class="small muted" style="margin:10px 0 0">These apply only to this device. App version 8 (6 Nov 2026).</p></section>
+    <p class="small muted" style="margin:10px 0 0">These apply only to this device. App version 10 (6 Nov 2026).</p></section>
 `;
 }
 
@@ -1283,22 +1297,21 @@ function mCancel(c,m){
 }
 function mForward(c){
   openModal(`<form class="formsec" id="mf">${mHead('Forward the letter',whoLine(c))}
-    <label class="f" style="flex-direction:row;align-items:center;gap:10px;color:var(--ink)"><input type="checkbox" id="fw-p" checked style="width:auto"> Protocol section</label>
-    <label class="f" style="flex-direction:row;align-items:center;gap:10px;color:var(--ink)"><input type="checkbox" id="fw-v" checked style="width:auto"> VIP lounge section</label>
-    <p class="small muted" style="margin:0">Records the time the printed copy left the health office.</p>${mBtns('Mark as forwarded')}</form>`,b=>{
+    <p style="margin:0">Send the printed letter to the <b>Protocol / VIP lounge section</b>.</p>
+    <p class="small muted" style="margin:0">This records the time the printed copy left the health office. Record the signed received copy when it comes back.</p>${mBtns('Mark as forwarded')}</form>`,b=>{
     $('#mf',b).onsubmit=e=>{e.preventDefault();const t=nowStamp(),sent=[];
-      if($('#fw-p').checked){c.fwd.protocol.sentAt=t;sent.push(SEC.protocol);}if($('#fw-v').checked){c.fwd.vip.sentAt=t;sent.push(SEC.vip);}
-      if(!sent.length)return;addLog(c,'Forwarded to '+sent.join(' and '));save(c);closeModal();render();toast('Forwarding recorded');};});
+      c.fwd.protocol=Object.assign({},c.fwd.protocol,{sentAt:t});
+      addLog(c,'Forwarded to the '+SEC.protocol);save(c);closeModal();render();toast('Forwarding recorded');};});
 }
 function mAck(c,k){
-  openModal(`<form class="formsec" id="mf">${mHead('Signed copy · '+SEC[k],whoLine(c))}
-    <div class="fgrid"><label class="f" for="k-by">Received by (name, designation)<input id="k-by" placeholder="Protocol Officer (duty)"></label>
+  openModal(`<form class="formsec" id="mf">${mHead('Signed received copy',whoLine(c)+' · '+SEC.protocol)}
+    <div class="fgrid"><label class="f" for="k-by">Received by (name, designation)<input id="k-by" placeholder="Protocol / VIP lounge officer (duty)"></label>
     <label class="f" for="k-at">Received at<input id="k-at" type="datetime-local" value="${nowStamp().replace(' ','T')}"></label>
     <div class="wide">${fileField('k-file','Photo of the signed copy')}</div></div>
     <div class="err" id="k-err"></div>${mBtns('Save')}</form>`,b=>{
     $('#mf',b).onsubmit=async e=>{e.preventDefault();const by=$('#k-by').value.trim();if(!by){$('#k-err').textContent='Enter who signed the received copy.';return;}
       try{await storeFile(c,'ack_'+k,PICK['k-file']);}catch(er){$('#k-err').textContent=er.message;return;}
-      c.fwd[k].ackBy=by;c.fwd[k].ackAt=($('#k-at').value||nowStamp()).replace('T',' ').slice(0,16);
+      c.fwd.protocol=Object.assign({sentAt:fwdOf(c).sentAt||nowStamp()},c.fwd.protocol);c.fwd.protocol.ackBy=by;c.fwd.protocol.ackAt=($('#k-at').value||nowStamp()).replace('T',' ').slice(0,16);
       addLog(c,'Signed copy filed from '+SEC[k]+' ('+by+')');save(c);closeModal();render();toast('Signed copy recorded');};});
 }
 function mAttach(c){
