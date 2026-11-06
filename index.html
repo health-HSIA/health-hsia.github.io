@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HSIA Protocol Registry</title>
 <meta name="theme-color" content="#081426">
 <link rel="manifest" href="manifest.webmanifest">
@@ -234,6 +234,74 @@ table.reg td.date,table.reg td.time{vertical-align:middle}
 .tabs .signout:hover{color:var(--vvip);background:var(--surface-2)}
 .tabs .signout.push{margin-left:auto}
 .btn:disabled{opacity:.55;cursor:wait}
+/* done tick */
+.tick{flex:0 0 auto;width:34px;height:34px;padding:0;border-radius:10px;border:2px solid var(--line);background:var(--surface);display:inline-grid;place-items:center;cursor:pointer;color:transparent;transition:background .15s,border-color .15s,color .15s}
+.tick svg{width:18px;height:18px}
+.tick:hover{border-color:var(--ok);color:var(--ok)}
+.tick.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.tick:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mv{cursor:pointer}
+.mv .side .row{align-items:center}
+.mv.isdone .nm,.mv.isdone .fl{opacity:.6}
+table.reg td.tickcell{vertical-align:middle;width:56px}
+/* improvements */
+.hero{padding-top:env(safe-area-inset-top)}
+.logo img{padding:4px}
+div.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.filepick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);border-radius:10px;background:var(--surface-2)}
+.filepick .btn svg{width:16px;height:16px}
+.filepick .fname{font-weight:500;overflow-wrap:anywhere}
+.btn svg{width:16px;height:16px}
+input.filled{background:var(--ok-soft);transition:background .4s}
+.chiprow{padding:0 18px 12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chipf{all:unset;box-sizing:border-box;cursor:pointer;font:600 12.5px/1 var(--body);padding:7px 12px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted);background:var(--surface)}
+.chipf:hover{color:var(--ink)}
+.chipf[aria-pressed="true"]{background:var(--night);border-color:var(--night);color:#fff}
+.chipf.vvip[aria-pressed="true"]{background:var(--vvip);border-color:var(--vvip);color:var(--cat-ink)}
+.chipf.vip[aria-pressed="true"]{background:var(--vip);border-color:var(--vip);color:var(--cat-ink)}
+.chipf.cour[aria-pressed="true"]{background:var(--cour);border-color:var(--cour);color:var(--cat-ink)}
+.chipf:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.callbtn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;border:2px solid var(--line);color:var(--accent);background:var(--surface)}
+.callbtn svg{width:16px;height:16px}
+.callbtn:hover{border-color:var(--accent)}
+a.tel{display:inline-flex;align-items:center;gap:5px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap}
+a.tel svg{width:13px;height:13px}
+a.flightlink{color:inherit;text-decoration:none;font-weight:700}
+td a.small.flightlink{display:inline-block;margin-top:4px;color:var(--accent);font-weight:600}
+.mv.soon{background:linear-gradient(90deg,var(--vvip-soft),transparent 40%)}
+.mv.soon::before{width:5px;background:var(--vvip)}
+details.donegrp{border-top:1px solid var(--line)}
+details.donegrp summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 18px;font:700 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ok)}
+details.donegrp summary::-webkit-details-marker{display:none}
+details.donegrp summary svg{width:14px;height:14px}
+details.donegrp summary::after{content:"Show";margin-left:auto;color:var(--muted);letter-spacing:.06em}
+details.donegrp[open] summary::after{content:"Hide"}
+.tabs .sm{display:none}
+.printhead{display:none}
+@media (max-width:640px){
+  .tabsbar{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;padding:0 8px calc(8px + env(safe-area-inset-bottom));z-index:30;max-width:none}
+  .tabs{gap:2px;padding:5px;border-radius:16px;box-shadow:0 -6px 24px -10px rgba(8,20,38,.35),var(--shadow)}
+  .tabs a{flex:1 1 0;justify-content:center;padding:11px 4px;font-size:13px}
+  .tabs .cta{margin-left:0}
+  .tabs .lg{display:none}.tabs .sm{display:inline}
+  .tabs .signout{display:none}
+  .hero .wrap{padding-bottom:40px}
+  main.wrap{padding-bottom:120px}
+  footer{padding-bottom:110px}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+@media print{
+  .hero,.tabsbar,footer,#toast,.btn,.filters,.tick,.callbtn,.chiprow,.modal,#rf-note,a.small.flightlink{display:none!important}
+  body{background:#fff}
+  .printhead{display:block;font:600 12px var(--body);color:#333;padding-top:10px}
+  main.wrap{padding-top:10px}
+  .card,.attn,.donecard{box-shadow:none!important}
+  .sched,.dbox,.chipboard,table.reg thead th,.cat,.pill,.dir,.fill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  details.donegrp>*{display:block}
+  .scroll{overflow:visible}
+  table.reg{font-size:11px}
+}
 /* ---------- category & status ---------- */
 .cat{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--display);font-stretch:115%;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px 5px 8px;border-radius:6px;color:var(--cat-ink);white-space:nowrap}
 .cat::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
@@ -243,6 +311,7 @@ table.reg td.date,table.reg td.time{vertical-align:middle}
 .pill.ok{background:var(--ok-soft);color:var(--ok)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
 .pill.info{background:var(--info-soft);color:var(--info)}
+.pill.crit{background:var(--vvip-soft);color:var(--vvip)}
 .pill.muted{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
 .att{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1.2 var(--body);color:var(--ink)}
 .att svg{width:15px;height:15px;color:var(--muted)}
@@ -394,9 +463,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:v
   <div class="wrap">
     <div>
       <div class="idblock">
-        <div class="logo" id="logo" aria-label="HSIA logo">
-          <div class="ph"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z"/></svg><b>HSIA</b></div>
-        </div>
+        <div class="logo" id="logo"><img src="data:image/jpeg;base64,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" alt="Hazrat Shahjalal International Airport logo"></div>
         <div>
           <div class="l1">HAZRAT SHAHJALAL INTERNATIONAL AIRPORT</div>
           <div class="l2">AIRPORT HEALTH OFFICE</div>
@@ -409,6 +476,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:v
   </div>
 </header>
 <div class="wrap tabsbar"><nav class="tabs" id="tabs" aria-label="Sections"></nav></div>
+<div class="wrap printhead" aria-hidden="true">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · Printed <span id="printdate"></span></div>
 <main class="wrap" id="view"></main>
 <footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry</footer>
 <div id="modal" class="modal" hidden><div class="sheet" role="dialog" aria-modal="true" id="modalBody"></div></div>
@@ -435,6 +503,9 @@ try{
     saveCase:c=>setDoc(doc(db,'protocols',c.id),c),
     watchSettings:cb=>onSnapshot(doc(db,'settings','main'),d=>cb(d.exists()?d.data():null),()=>cb(null)),
     saveSettings:s=>setDoc(doc(db,'settings','main'),s),
+    watchLookups:cb=>onSnapshot(doc(db,'settings','lookups'),d=>cb(d.exists()?d.data():null),()=>cb(null)),
+    saveLookups:o=>setDoc(doc(db,'settings','lookups'),o,{merge:true}),
+    loadAll:()=>getDocs(collection(db,'protocols')).then(s=>s.docs.map(d=>d.data())),
     putFile:f=>{const ref=doc(collection(db,'files'));return {id:ref.id,done:setDoc(ref,f)};},
     getFile:id=>getDoc(doc(db,'files',id)).then(d=>d.exists()?d.data():null)
   };
@@ -494,7 +565,7 @@ const L=(d,t,text)=>({at:stamp(d,t),by:'Duty Doctor',text});
    (kept in sync in real time); ARCH holds older months loaded on demand for the register and reports. */
 let S={cases:[],rules:defaultRules(),familyTier:3,logo:null};
 const LIVE=new Map(),ARCH=new Map(),FILES=new Map(),MONTHS=new Set();
-let pendingRender=false,unsubs=[];
+let pendingRender=false,unsubs=[],LOADERR=null,ALL_LOADED=false,LK={flights:{},people:{}};
 const LIVE_DAYS=45;
 function rebuild(){const m=new Map(ARCH);LIVE.forEach((v,k)=>m.set(k,v));S.cases=[...m.values()];}
 function prep(c){
@@ -505,8 +576,64 @@ function prep(c){
 }
 function save(c){
   if(!c||!canEdit())return;
-  LIVE.set(c.id,c);rebuild();
+  LIVE.set(c.id,c);rebuild();learn(c);
   Backend.saveCase(prep(c)).catch(err=>{console.error(err);toast('Could not save. '+(err&&err.code==='permission-denied'?'You do not have permission.':'Check the internet connection.'));});
+}
+/* ---------- learning: flight routes and officials ---------- */
+const BD_AIRPORTS=['DAC','CGP','ZYL','CXB','JSR','RJH','SPD','BZL','IRD','TKR'];
+const fkey=f=>String(f||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const pkey=n=>String(n||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+const codes=r=>String(r||'').toUpperCase().match(/\b[A-Z]{3}\b/g)||[];
+function normRoute(r){const c=codes(r);return c.length>=2?c.join(' → '):String(r||'').trim();}
+function reverseRoute(r){const c=codes(r);return c.length>=2?c.slice().reverse().join(' → '):'';}
+function routeInfo(r){const c=codes(r);if(c.length<2)return null;const a=c[0],b=c[c.length-1];return {type:b==='DAC'?'Arrival':a==='DAC'?'Departure':null,scope:BD_AIRPORTS.includes(a)&&BD_AIRPORTS.includes(b)?'Domestic':'International'};}
+function routeFor(f){const k=fkey(f);if(!k)return '';if(LK.flights[k]&&LK.flights[k].route)return LK.flights[k].route;
+  const hit=allMv().filter(x=>fkey(x.m.flight)===k&&x.m.route).sort((a,b)=>dt(b.m)-dt(a.m))[0];return hit?hit.m.route:'';}
+function knownFlights(){const m=new Map();Object.entries(LK.flights).forEach(([k,v])=>m.set(k,{flight:v.flight||k,route:v.route}));allMv().forEach(x=>{const k=fkey(x.m.flight);if(k&&x.m.route&&!m.has(k))m.set(k,{flight:x.m.flight,route:x.m.route});});return [...m.values()];}
+function returnFlightFor(flight,route){const rev=reverseRoute(route);if(!rev)return '';const air=(fkey(flight).match(/^[A-Z0-9]{2}/)||[''])[0];
+  const hit=knownFlights().find(f=>f.route===rev&&fkey(f.flight).startsWith(air)&&fkey(f.flight)!==fkey(flight));return hit?hit.flight:'';}
+function personFor(name){const k=pkey(name);if(!k)return null;if(LK.people[k])return LK.people[k];
+  const c=S.cases.filter(x=>pkey(x.vipName)===k).sort((a,b)=>String(b.updatedAt||b.lastDate||'').localeCompare(String(a.updatedAt||a.lastDate||'')))[0];
+  return c?{name:c.vipName,designation:c.designation,org:c.org,grade:c.grade,contact:c.contact,tier:c.tier}:null;}
+function knownPeople(){const m=new Map();Object.values(LK.people).forEach(v=>m.set(pkey(v.name),v.name));S.cases.forEach(c=>{const k=pkey(c.vipName);if(k&&!m.has(k))m.set(k,c.vipName);});return [...m.values()].sort();}
+function learn(c){
+  if(!Backend.saveLookups)return;
+  const fl={},pe={};
+  c.movements.forEach(m=>{const k=fkey(m.flight);if(k&&m.route&&m.status!=='Cancelled'&&(!LK.flights[k]||LK.flights[k].route!==m.route)){fl[k]={flight:m.flight,route:m.route};LK.flights[k]=fl[k];}});
+  const k=pkey(c.vipName);
+  if(k){const v={name:c.vipName,designation:c.designation||'',org:c.org||'',grade:c.grade||'',contact:c.contact||'',tier:c.tier};if(JSON.stringify(LK.people[k]||{})!==JSON.stringify(v)){pe[k]=v;LK.people[k]=v;}}
+  const o={};if(Object.keys(fl).length)o.flights=fl;if(Object.keys(pe).length)o.people=pe;
+  if(Object.keys(o).length)Backend.saveLookups(o).catch(e=>console.error(e));
+}
+function needAll(){
+  if(ALL_LOADED||!Backend.loadAll)return;ALL_LOADED=true;
+  Backend.loadAll().then(list=>{list.forEach(c=>{if(!LIVE.has(c.id))ARCH.set(c.id,c);});rebuild();refreshSoon();}).catch(e=>{ALL_LOADED=false;console.error(e);toast('Could not load older protocols.');});
+}
+/* ---------- phone numbers ---------- */
+function phonesIn(str){return (String(str||'').match(/\+?\d[\d\s-]{7,}\d/g)||[]).filter(x=>{const d=x.replace(/\D/g,'');return d.length>=10&&d.length<=14;});}
+function telOf(x){return x.replace(/[^\d+]/g,'');}
+function contactHtml(str){
+  const s=String(str||'');if(!s)return '';let out='',last=0;const re=/\+?\d[\d\s-]{7,}\d/g;let m;
+  while((m=re.exec(s))){const d=m[0].replace(/\D/g,'');if(d.length<10||d.length>14)continue;out+=esc(s.slice(last,m.index))+`<a class="tel" href="tel:${telOf(m[0])}">${ICON_PHONE}${esc(m[0])}</a>`;last=m.index+m[0].length;}
+  return out+esc(s.slice(last));
+}
+const ICON_PHONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>';
+const ICON_CAM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
+/* ---------- file picking (camera or file) ---------- */
+const PICK={};
+function fileField(id,label){delete PICK[id];
+  return `<div class="f"><span>${label}</span><div class="filepick" id="${id}">
+    <label class="btn sm">${ICON_CAM}Take photo<input type="file" accept="image/*" capture="environment" data-pick="${id}" hidden></label>
+    <label class="btn sm">Choose file<input type="file" accept="image/*,application/pdf" data-pick="${id}" hidden></label>
+    <span class="fname small muted">No file chosen</span></div></div>`;}
+function downloadText(name,text){
+  try{const blob=new Blob(['﻿'+text],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},1500);toast('Downloading '+name);}
+  catch(e){openModal(`${mHead('Copy the data','Select all and copy, then paste into Excel.')}<textarea style="min-height:220px" class="mono small" readonly>${esc(text)}</textarea><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`);}
+}
+function csvOf(list){
+  const head=['Date','Time','Actual time','Arr/Dep','Scope','Flight','Route','Name','Designation','Office','Beneficiary','Contact','Vehicles','Category','Attended by','Status','Remarks'];
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  return [head.map(q).join(',')].concat(list.map(({c,m})=>[dmy(m.date),m.time,m.actualTime,m.type,m.scope,m.flight,m.route,c.vipName,c.designation,c.org,c.beneficiary==='Family/Guest'?c.guests:'Self',c.contact,c.vehicles,catName(c.tier),m.assigned||m.status==='Done'?WHO[m.attendBy]:'Not assigned',mvStatus(m)[0],m.remarks].map(q).join(','))).join('\n');
 }
 function saveSettings(){
   if(!canEdit())return;
@@ -514,7 +641,7 @@ function saveSettings(){
 }
 function refreshSoon(){
   const nav=currentNav();
-  if(!$('#modal').hidden||nav==='new'){pendingRender=true;return;}
+  if(!$('#modal').hidden||(nav==='new'&&$('#newForm'))){pendingRender=true;return;}
   if(nav==='register'&&$('#regTable')){$('#regTable').innerHTML=regTable();renderBoard();paintTabs(nav);return;}
   render();
 }
@@ -527,11 +654,12 @@ function needMonth(month){
 function startData(){
   unsubs.forEach(u=>{try{u();}catch(e){}});
   unsubs=[
-    Backend.watchRecent(addDays(-LIVE_DAYS),list=>{LIVE.clear();list.forEach(c=>LIVE.set(c.id,c));rebuild();READY=true;refreshSoon();},err=>{console.error(err);READY=true;toast('Could not load protocols. Check the internet connection.');render();}),
-    Backend.watchSettings(d=>{S.rules=(d&&d.rules)||defaultRules();S.familyTier=(d&&d.familyTier)||3;S.logo=(d&&d.logo)||null;paintLogo();refreshSoon();})
+    Backend.watchRecent(addDays(-LIVE_DAYS),list=>{LOADERR=null;LIVE.clear();list.forEach(c=>LIVE.set(c.id,c));rebuild();READY=true;refreshSoon();},err=>{console.error(err);READY=true;LOADERR={code:(err&&err.code)||'unknown',msg:(err&&err.message)||''};render();}),
+    Backend.watchSettings(d=>{S.rules=(d&&d.rules)||defaultRules();S.familyTier=(d&&d.familyTier)||3;S.logo=(d&&d.logo)||null;paintLogo();refreshSoon();}),
+    Backend.watchLookups?Backend.watchLookups(d=>{LK.flights=(d&&d.flights)||{};LK.people=(d&&d.people)||{};}):()=>{}
   ];
 }
-function stopData(){unsubs.forEach(u=>{try{u();}catch(e){}});unsubs=[];LIVE.clear();ARCH.clear();MONTHS.clear();FILES.clear();rebuild();READY=false;}
+function stopData(){LOADERR=null;ALL_LOADED=false;LK={flights:{},people:{}};unsubs.forEach(u=>{try{u();}catch(e){}});unsubs=[];LIVE.clear();ARCH.clear();MONTHS.clear();FILES.clear();rebuild();READY=false;}
 const canEdit=()=>MODE==='doctor';
 const caseById=id=>S.cases.find(c=>c.id===id);
 const allMv=()=>S.cases.flatMap(c=>c.movements.map(m=>({c,m})));
@@ -600,23 +728,40 @@ function actionItems(){
 }
 
 /* ---------- fragments ---------- */
+const TICK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function tickBtn(c,m){
+  if(m.status==='Cancelled'||!canEdit())return '';
+  const on=m.status==='Done';
+  return `<button type="button" class="tick${on?' on':''}" data-act="tick" data-case="${c.id}" data-mv="${m.id}" aria-pressed="${on}" aria-label="${on?'Mark '+esc(m.flight)+' as not done':'Mark '+esc(m.flight)+' as done'}" title="${on?'Done. Tap to undo':'Mark as done'}">${TICK}</button>`;
+}
+function toggleDone(c,m){
+  if(m.status==='Done'){m.status='Open';m.actualTime='';m.outcome='';addLog(c,m.flight+' marked as not done');save(c);render();toast(m.flight+' marked as not done');}
+  else{m.status='Done';m.assigned=true;m.actualTime=m.actualTime||m.time;m.outcome=m.outcome||'Completed';addLog(c,m.flight+' marked as done');save(c);render();toast('✓ '+m.flight+' marked as done');}
+}
+function soonPill(m){if(m.status!=='Open')return '';const mins=(dt(m)-Date.now())/6e4;return mins>=0&&mins<=60?`<span class="pill crit">in ${Math.max(1,Math.round(mins))} min</span>`:'';}
+function callBtn(c){const p=phonesIn(c.contact)[0];return p?`<a class="callbtn" href="tel:${telOf(p)}" aria-label="Call ${esc(p)}" title="Call ${esc(p)}">${ICON_PHONE}</a>`:'';}
 function mvCard({c,m}){
   const cls=CATCLS[Number(c.tier)];
-  return `<a class="mv ${cls}" href="#case-${c.id}">
+  const mins=(dt(m)-Date.now())/6e4,soon=m.status==='Open'&&mins>=0&&mins<=60;
+  return `<div class="mv ${cls}${m.status==='Done'?' isdone':''}${soon?' soon':''}" data-href="#case-${c.id}" tabindex="0" role="link">
     <div class="chipboard"><b>${esc(m.time)}</b><span>${m.type==='Arrival'?'ARR':'DEP'}${m.scope==='Domestic'?' · DOM':''}</span></div>
     <div><div class="fl"><span class="mono">${esc(m.flight)}</span><span class="rt">${esc(m.route)}</span></div>
       <div class="nm">${esc(c.vipName)}${c.beneficiary==='Family/Guest'?' <span class="muted small" style="font-weight:500">(family / guests)</span>':''}</div>
       <div class="ds">${esc(c.designation)}${c.org?', '+esc(c.org):''}</div>
       ${needsContact(c)&&m.status==='Open'?'<div class="flag">No contact number</div>':''}</div>
-    <div class="side"><div class="row">${catBadge(c.tier)}${pill(mvStatus(m))}</div>${MODE==='si'?'':attHtml(m)}</div></a>`;
+    <div class="side"><div class="row">${catBadge(c.tier)}${soonPill(m)||pill(mvStatus(m))}${callBtn(c)}${tickBtn(c,m)}</div>${attHtml(m)}</div></div>`;
 }
 const DIRI={Arrival:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 9v9H9"/></svg>',Departure:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M9 6h9v9"/></svg>'};
 const dirBox=m=>`<span class="dir ${m.type==='Arrival'?'arr':'dep'}">${DIRI[m.type]}${m.type}</span>`;
-function grouped(list,emptyText){
+function dayLabel(date,n){return `<div class="daylabel${date===todayStr()?' istoday':''}"><span class="dl"><span class="dl-day">${date===todayStr()?'Today':date===tomorrowStr()?'Tomorrow':new Date(date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long'})}</span><span class="dl-date">${dmy(date)}</span></span><span>${n} protocol${n===1?'':'s'}</span></div>`;}
+function grouped(list,emptyText,collapseDone){
   if(!list.length)return `<div class="empty">${emptyText}</div>`;
-  let out='',last='';
-  list.forEach(x=>{if(x.m.date!==last){last=x.m.date;const n=list.filter(y=>y.m.date===last).length;out+=`<div class="daylabel${x.m.date===todayStr()?' istoday':''}"><span class="dl"><span class="dl-day">${x.m.date===todayStr()?'Today':x.m.date===tomorrowStr()?'Tomorrow':new Date(x.m.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long'})}</span><span class="dl-date">${dmy(x.m.date)}</span></span><span>${n} protocol${n===1?'':'s'}</span></div>`;}out+=mvCard(x);});
-  return out;
+  const days=[];list.forEach(x=>{let d=days.find(y=>y.date===x.m.date);if(!d){d={date:x.m.date,items:[]};days.push(d);}d.items.push(x);});
+  return days.map(d=>{
+    if(!collapseDone)return dayLabel(d.date,d.items.length)+d.items.map(mvCard).join('');
+    const open=d.items.filter(x=>x.m.status!=='Done'),done=d.items.filter(x=>x.m.status==='Done');
+    return dayLabel(d.date,d.items.length)+open.map(mvCard).join('')+(done.length?`<details class="donegrp"><summary>${TICK}Completed (${done.length})</summary>${done.map(mvCard).join('')}</details>`:'');
+  }).join('');
 }
 function fileThumb(c,key){
   const f=c.files&&c.files[key];if(!f||!f.id)return '';
@@ -641,7 +786,7 @@ function compressImage(file,maxDim,q){
   });
 }
 async function prepareFile(input,maxDim){
-  const f=input&&input.files&&input.files[0];if(!f)return null;
+  const f=input&&input.files?input.files[0]:input;if(!f)return null;
   if(/^image\//.test(f.type))return {name:f.name.replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',data:await compressImage(f,maxDim||1600,0.7)};
   if(f.type==='application/pdf'){
     if(f.size>700*1024)throw new Error('This PDF is larger than 700 KB. Attach a photo of the letter instead, or compress the PDF.');
@@ -691,7 +836,8 @@ function flap(){
 }
 
 /* ---------- views ---------- */
-let dashF='week';
+let dashF='week',dashCat='';
+const ICON_SHARE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
 function dashLists(){
   const now=Date.now(),list=allMv(),T=todayStr(),M=tomorrowStr(),wk=addDays(6);
   const live=x=>x.m.status!=='Cancelled';
@@ -733,12 +879,15 @@ function ringCard(done,total,clickable){
 }
 function vToday(){
   if(MODE==='si')return vTodaySI();
-  const D=dashLists(),cur=D[dashF]||D.week,items=actionItems();
+  const D=dashLists(),cur0=D[dashF]||D.week,items=actionItems();
+  const cur=Object.assign({},cur0,{items:dashCat?cur0.items.filter(x=>String(x.c.tier)===dashCat):cur0.items});
+  const chips=`<div class="chips" role="group" aria-label="Filter by category"><button type="button" class="chipf" data-catf="" aria-pressed="${!dashCat}">All</button>${S.rules.map(r=>`<button type="button" class="chipf ${CATCLS[r.tier]}" data-catf="${r.tier}" aria-pressed="${dashCat===String(r.tier)}">${esc(r.name)}</button>`).join('')}</div>`;
   const attn=[['ack',OVI.letter,'Letters awaiting signed copy','Protocol or VIP lounge section has not signed'],['contact',OVI.phone,'Need a contact number','No PS / APS mobile on record'],['assign',OVI.assign,'Need assigning','Today or tomorrow, no Duty Doctor or SI set']];
   const tot=attn.reduce((a,[k])=>a+(D[k].count!=null?D[k].count:D[k].items.length),0);
   const todayAll=D.today.items;
   return `
-  <div class="pagehead"><div><div class="eyebrow">${longDate(todayStr())}</div><h1 style="margin-top:8px">Today at Airport Health Office, HSIA</h1></div></div>
+  <div class="pagehead"><div><div class="eyebrow">${longDate(todayStr())}</div><h1 style="margin-top:8px">Today at Airport Health Office, HSIA</h1></div>
+    <button class="btn" data-act="share">${ICON_SHARE}Share summary</button></div>
   <div class="overview">
     ${scheduleCard('Schedule',[{key:'today',n:D.today.items.length,l:'Today',hot:true},{key:'tomorrow',n:D.tomorrow.items.length,l:'Tomorrow'},{key:'week',n:D.week.items.length,l:'This week'}],weekStrip(()=>true),true)}
     <section class="attn"><div class="attnhead"><span class="eyebrow">Needs attention</span><span class="tot ${tot?'':'clear'}">${tot?tot+' open':'All clear'}</span></div>
@@ -749,7 +898,8 @@ function vToday(){
   </div>
   <div class="split">
     <section class="card flush"><div class="cardhead"><div class="listtitle"><h2>${esc(cur.t)}</h2><span class="muted small">${cur.items.length} protocol${cur.items.length===1?'':'s'}</span></div>${dashF!=='week'?'<button class="btn sm" data-dash="week">Show this week</button>':''}</div>
-      ${grouped(cur.items,'Nothing here.')}</section>
+      <div class="chiprow">${chips}</div>
+      ${grouped(cur.items,dashCat?'No protocols in this category.':'Nothing here.',dashF!=='done')}</section>
     <section class="card flush"><div class="cardhead"><h2>Needs action</h2><span class="muted small">${items.length}</span></div>
       ${items.length?items.map(i=>`<a class="act ${i.sev}" href="#case-${i.c.id}"><span class="dot"></span><div><div class="what">${esc(i.text)}</div><div class="ctx">${esc(i.c.vipName)} · ${esc(i.c.designation)}</div></div><span class="when">${rel(i.due)}</span></a>`).join(''):'<div class="empty">Nothing pending.</div>'}</section>
   </div>`;
@@ -778,7 +928,7 @@ let regF={month:todayStr().slice(0,7),q:'',type:'',cat:'',status:''};
 function regRows(){
   const q=regF.q.trim().toLowerCase();
   return allMv().filter(({c,m})=>{
-    if(regF.month&&!m.date.startsWith(regF.month))return false;
+    if(!q&&regF.month&&!m.date.startsWith(regF.month))return false;
     if(regF.type&&m.type!==regF.type)return false;
     if(regF.cat&&String(c.tier)!==regF.cat)return false;
     if(regF.status&&mvStatus(m)[0]!==regF.status)return false;
@@ -789,27 +939,28 @@ function regRows(){
 function vRegister(){
   return `
   <div class="pagehead"><div><div class="eyebrow">All arrivals and departures</div><h1 style="margin-top:8px">Protocol register</h1><p>Date order, with the same columns as the paper register.</p></div>
-    <button class="btn" data-act="copy-csv">Copy as CSV for Excel</button></div>
+    <div class="btnrow"><button class="btn" data-act="dl-csv">Download Excel</button><button class="btn" data-act="print">Print / PDF</button></div></div>
   <div class="card"><form class="filters" onsubmit="return false">
     <label class="f" for="rf-month">Month<input type="month" id="rf-month" value="${esc(regF.month)}"></label>
     <label class="f" for="rf-q">Search<input type="search" id="rf-q" placeholder="Name, flight, office" value="${esc(regF.q)}"></label>
     <label class="f" for="rf-cat">Category<select id="rf-cat"><option value="">All</option>${S.rules.map(r=>`<option value="${r.tier}"${regF.cat==String(r.tier)?' selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
     <label class="f" for="rf-type">Arr / Dep<select id="rf-type"><option value="">All</option><option${regF.type==='Arrival'?' selected':''}>Arrival</option><option${regF.type==='Departure'?' selected':''}>Departure</option></select></label>
     <label class="f" for="rf-status">Status<select id="rf-status"><option value="">All</option>${['Not assigned','Scheduled','Report pending','Completed','Cancelled'].map(s=>`<option${regF.status===s?' selected':''}>${s}</option>`).join('')}</select></label>
-  </form></div>
+  </form><div class="small muted" id="rf-note" style="margin-top:10px">${regF.q.trim()?'Searching all months.':'Type in Search to look across all months.'}</div></div>
   <div class="card flush" id="regTable">${regTable()}</div>`;
 }
 function regTable(){
   const rows=regRows();let last='';
   if(!rows.length)return '<div class="empty">No entries match these filters.</div>';
-  return `<div class="scroll"><table class="reg"><thead><tr><th>Date</th><th>Time</th><th>Arr / Dept</th><th>Flight</th><th>Name / Designation / Dept / Contact</th><th>Category</th>${MODE==='si'?'':'<th>Attended by</th>'}<th>Status</th></tr></thead><tbody>
+  return `<div class="scroll"><table class="reg"><thead><tr><th>Done</th><th>Date</th><th>Time</th><th>Arr / Dept</th><th>Flight</th><th>Name / Designation / Dept / Contact</th><th>Category</th>${MODE==='si'?'':'<th>Attended by</th>'}<th>Status</th></tr></thead><tbody>
   ${rows.map(({c,m})=>{const nd=m.date!==last;last=m.date;
     return `<tr class="${nd?'newday':''}" data-href="#case-${c.id}" tabindex="0">
+      <td class="tickcell" data-label="Done">${tickBtn(c,m)}</td>
       <td class="date" data-label="Date">${nd?`<span class="dbox"><b>${dmy(m.date)}</b><small>${new Date(m.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short'})}</small></span>`:''}</td>
       <td class="time" data-label="Time"><span class="tbox">${esc(m.time)}${m.status==='Done'&&m.actualTime&&m.actualTime!==m.time?`<small>Attended ${esc(m.actualTime)}</small>`:''}</span></td>
       <td data-label="Arr / Dept">${dirBox(m)}${m.scope==='Domestic'?'<div><span class="dom">Domestic</span></div>':''}</td>
-      <td data-label="Flight" style="white-space:nowrap"><span class="mono" style="font-weight:700">${esc(m.flight)}</span><div class="small muted mono">${esc(m.route)}</div></td>
-      <td data-label="Name"><b>${esc(c.vipName)}</b>, ${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?'<div class="small muted">For: '+esc(c.guests||'family / guests')+'</div>':''}<div class="small ${c.contact?'muted':''}" ${c.contact?'':'style="color:var(--warn);font-weight:600"'}>${c.contact?esc(c.contact):'No contact number'}</div></td>
+      <td data-label="Flight" style="white-space:nowrap"><a class="mono flightlink" href="${statusUrl(m.flight)}" target="_blank" rel="noopener" title="Live flight status">${esc(m.flight)}</a><div class="small muted mono">${esc(m.route)}</div></td>
+      <td data-label="Name"><b>${esc(c.vipName)}</b>, ${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?'<div class="small muted">For: '+esc(c.guests||'family / guests')+'</div>':''}<div class="small ${c.contact?'muted':''}" ${c.contact?'':'style="color:var(--warn);font-weight:600"'}>${c.contact?contactHtml(c.contact):'No contact number'}</div></td>
       <td data-label="Category">${catBadge(c.tier)}</td>
       ${MODE==='si'?'':`<td data-label="Attended by">${attHtml(m)||'<span class="muted">–</span>'}</td>`}
       <td data-label="Status">${pill(mvStatus(m))}</td></tr>`;}).join('')}
@@ -821,16 +972,45 @@ function csv(){
   return [head.map(q).join(',')].concat(regRows().map(({c,m})=>[dmy(m.date),m.time,m.actualTime,m.type,m.scope,m.flight,m.route,c.vipName,c.designation,c.org,c.beneficiary==='Family/Guest'?c.guests:'Self',c.contact,catName(c.tier),m.assigned?WHO[m.attendBy]:'Not assigned',mvStatus(m)[0],m.remarks].map(q).join(','))).join('\n');
 }
 
-function mvRowHtml(){
-  const id=uid('r');
-  return `<div class="mvrow" data-row>
-    <label class="f" for="${id}a">Arr / Dep<select id="${id}a" name="type"><option>Arrival</option><option>Departure</option></select></label>
-    <label class="f" for="${id}b">Scope<select id="${id}b" name="scope"><option>International</option><option>Domestic</option></select></label>
-    <label class="f" for="${id}c">Date <span class="req">*</span><input id="${id}c" type="date" name="date" value="${todayStr()}"></label>
-    <label class="f" for="${id}d">Time <span class="req">*</span><input id="${id}d" type="time" name="time"></label>
-    <label class="f" for="${id}e">Flight <span class="req">*</span><input id="${id}e" name="flight" placeholder="QR-640"></label>
-    <label class="f" for="${id}f">Route<input id="${id}f" name="route" placeholder="DOH → DAC"></label>
+const AIRPORTS=[["CGP", "Chattogram"], ["ZYL", "Sylhet"], ["CXB", "Cox's Bazar"], ["JSR", "Jashore"], ["RJH", "Rajshahi"], ["SPD", "Saidpur"], ["BZL", "Barishal"], ["DXB", "Dubai"], ["AUH", "Abu Dhabi"], ["SHJ", "Sharjah"], ["DOH", "Doha"], ["MCT", "Muscat"], ["BAH", "Bahrain"], ["KWI", "Kuwait"], ["RUH", "Riyadh"], ["JED", "Jeddah"], ["MED", "Madinah"], ["DMM", "Dammam"], ["IST", "Istanbul"], ["CAI", "Cairo"], ["ADD", "Addis Ababa"], ["NBO", "Nairobi"], ["CCU", "Kolkata"], ["DEL", "Delhi"], ["BOM", "Mumbai"], ["MAA", "Chennai"], ["BLR", "Bengaluru"], ["HYD", "Hyderabad"], ["GAU", "Guwahati"], ["IXA", "Agartala"], ["KTM", "Kathmandu"], ["CMB", "Colombo"], ["MLE", "Male"], ["KHI", "Karachi"], ["LHE", "Lahore"], ["ISB", "Islamabad"], ["BKK", "Bangkok"], ["SIN", "Singapore"], ["KUL", "Kuala Lumpur"], ["RGN", "Yangon"], ["CGK", "Jakarta"], ["MNL", "Manila"], ["HAN", "Hanoi"], ["SGN", "Ho Chi Minh City"], ["HKG", "Hong Kong"], ["CAN", "Guangzhou"], ["KMG", "Kunming"], ["CTU", "Chengdu"], ["CKG", "Chongqing"], ["PEK", "Beijing Capital"], ["PKX", "Beijing Daxing"], ["PVG", "Shanghai"], ["TPE", "Taipei"], ["ICN", "Seoul"], ["NRT", "Tokyo Narita"], ["HND", "Tokyo Haneda"], ["LHR", "London Heathrow"], ["MAN", "Manchester"], ["CDG", "Paris"], ["FRA", "Frankfurt"], ["AMS", "Amsterdam"], ["GVA", "Geneva"], ["FCO", "Rome"], ["JFK", "New York JFK"], ["YYZ", "Toronto"], ["SYD", "Sydney"], ["MEL", "Melbourne"]];
+const APN=new Map(AIRPORTS);
+const apLabel=code=>APN.has(code)?`${APN.get(code)} (${code})`:code;
+function parsePlace(v){
+  v=String(v||'').trim();if(!v)return '';
+  const m=v.match(/\(([A-Za-z]{3})\)\s*$/);if(m)return m[1].toUpperCase();
+  if(/^[A-Za-z]{3}$/.test(v)&&(APN.has(v.toUpperCase())||v===v.toUpperCase()))return v.toUpperCase();
+  const lv=v.toLowerCase();const ex=AIRPORTS.find(([c,n])=>n.toLowerCase()===lv);if(ex)return ex[0];
+  const st=AIRPORTS.filter(([c,n])=>n.toLowerCase().startsWith(lv));if(st.length===1)return st[0][0];
+  if(/^[A-Za-z]{3}$/.test(v))return v.toUpperCase();
+  return v; // a place not in the list is kept as typed
+}
+function placeFromRoute(route,type){const c=codes(route);if(!c.length)return '';const other=type==='Departure'?c[c.length-1]:c[0];
+  const pick=(c[0]==='DAC')?c[c.length-1]:(c[c.length-1]==='DAC')?c[0]:other;return apLabel(pick);}
+function routeFromRow(row){const type=$('[name=type]',row).value,pl=parsePlace($('[name=place]',row).value);if(!pl)return '';return type==='Departure'?`DAC → ${pl}`:`${pl} → DAC`;}
+function airportList(){return `<datalist id="dl-airports">${AIRPORTS.map(([c,n])=>`<option value="${esc(n)} (${c})">`).join('')}</datalist>`;}
+const statusUrl=f=>'https://www.google.com/search?q='+encodeURIComponent(fkey(f)+' flight status');
+function flightFields(id,m){
+  m=m||{};const sel=(v,o)=>v===o?' selected':'';
+  return `<label class="f" for="${id}a">Arr / Dep<select id="${id}a" name="type"><option${sel(m.type,'Arrival')}>Arrival</option><option${sel(m.type,'Departure')}>Departure</option></select></label>
+    <label class="f" for="${id}b">Scope<select id="${id}b" name="scope"><option${sel(m.scope,'International')}>International</option><option${sel(m.scope,'Domestic')}>Domestic</option></select></label>
+    <label class="f" for="${id}c">Date <span class="req">*</span><input id="${id}c" type="date" name="date" value="${esc(m.date==null?todayStr():m.date)}"></label>
+    <label class="f" for="${id}d">Time <span class="req">*</span><input id="${id}d" type="time" name="time" value="${esc(m.time||'')}"></label>
+    <label class="f" for="${id}e">Flight <span class="req">*</span><input id="${id}e" name="flight" placeholder="QR-640" list="dl-flights" autocapitalize="characters" autocomplete="off" value="${esc(m.flight||'')}"></label>
+    <label class="f" for="${id}f"><span>City</span><input id="${id}f" name="place" list="dl-airports" placeholder="City, e.g. Dubai" autocomplete="off" value="${esc(placeFromRoute(m.route,m.type))}"></label>`;
+}
+function flightDatalist(){return `<datalist id="dl-flights">${knownFlights().map(f=>`<option value="${esc(f.flight)}">${esc(f.route)}</option>`).join('')}</datalist>`;}
+function mvRowHtml(m){
+  return `<div class="mvrow" data-row>${flightFields(uid('r'),m)}
     <button type="button" class="btn sm danger rm" data-act="rm-row">Remove</button></div>`;
+}
+function normFlight(f){const x=String(f||'').toUpperCase().replace(/\s+/g,'');const m=x.match(/^([A-Z0-9]{2})-?(\d{1,4}[A-Z]?)$/);return m?m[1]+'-'+m[2]:x;}
+function readRow(r){return {type:$('[name=type]',r).value,scope:$('[name=scope]',r).value,date:$('[name=date]',r).value,time:$('[name=time]',r).value,flight:normFlight($('[name=flight]',r).value),route:routeFromRow(r)};}
+function returnOf(x){return {type:x.type==='Arrival'?'Departure':'Arrival',scope:x.scope,date:'',time:'',flight:returnFlightFor(x.flight,x.route),route:reverseRoute(x.route)};}
+function rowAuto(row,src){
+  const fl=$('[name=flight]',row),pl=$('[name=place]',row),ty=$('[name=type]',row),sc=$('[name=scope]',row);if(!fl||!pl)return;
+  if(src==='flight'&&!pl.value.trim()){const r=routeFor(fl.value);if(r){const i=routeInfo(r);if(i&&i.type)ty.value=i.type;pl.value=placeFromRoute(r,ty.value);pl.classList.add('filled');setTimeout(()=>pl.classList.remove('filled'),1600);}}
+  if(src==='place'&&pl.value.trim()){const c=parsePlace(pl.value);if(APN.has(c))pl.value=apLabel(c);}
+  const i=routeInfo(routeFromRow(row));if(i)sc.value=i.scope;
 }
 function vNew(){
   return `
@@ -838,7 +1018,7 @@ function vNew(){
   <form id="newForm" class="card formsec" novalidate>
     <div class="secno"><b>1</b>Protocol for</div>
     <div class="fgrid">
-      <label class="f" for="f-name">Name of official <span class="req">*</span><input id="f-name"></label>
+      <label class="f" for="f-name">Name of official <span class="req">*</span><input id="f-name" list="dl-people" autocomplete="off"></label>
       <label class="f" for="f-des">Designation <span class="req">*</span><input id="f-des" placeholder="Director General"></label>
       <label class="f" for="f-org">Ministry / Directorate<input id="f-org"></label>
       <label class="f" for="f-grade">Grade<select id="f-grade"><option value="">Not stated</option>${[1,2,3,4,5,6].map(g=>`<option value="${g}">Grade-${g}</option>`).join('')}</select></label>
@@ -849,11 +1029,12 @@ function vNew(){
     </div>
     <div class="catbox" id="catBox"></div>
     <div class="secno"><b>2</b>Flights</div>
-    <p class="small muted" style="margin:-6px 0 0">One letter can cover several flights, such as receiving on arrival and seeing off on departure.</p>
+    <p class="small muted" style="margin:-6px 0 0">Choose Arrival or Departure, then start typing the city (where the flight comes from or goes to) and pick it from the list. Flight numbers used before fill the city in by themselves.</p>
     <div id="mvRows" class="formsec">${mvRowHtml()}</div>
-    <div><button type="button" class="btn sm" data-act="add-row">Add another flight</button></div>
+    <div class="btnrow"><button type="button" class="btn sm" data-act="add-return">Add return flight</button><button type="button" class="btn sm" data-act="add-row">Add another flight</button></div>
     <div class="secno"><b>3</b>Protocol letter</div>
-    <label class="f" for="f-scan">Attach the letter (photo or PDF)<input id="f-scan" type="file" accept="image/*,application/pdf"></label>
+    ${fileField('f-scan','Attach the letter (photo or PDF)')}
+    ${flightDatalist()}<datalist id="dl-people">${knownPeople().map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
     <div class="err" id="formErr" role="alert"></div>
     <div class="btnrow"><button class="btn primary" type="submit">Save protocol</button><a class="btn" href="#today">Cancel</a></div>
   </form>`;
@@ -876,16 +1057,17 @@ function vCase(id){
     const th=fileThumb(c,'ack_'+k);
     return `<div class="secrow"><div><b>${SEC[k]}</b><div style="margin-top:6px">${state}</div>${th?'<div style="margin-top:8px">'+th+'</div>':''}</div><div>${act}</div></div>`;}).join('');
   const rows=c.movements.slice().sort((a,b)=>dt(a)-dt(b)).map(m=>{
-    const open=m.status==='Open',btns=[];
+    const open=m.status==='Open',btns=[];if(m.status!=='Cancelled'&&ed)btns.push(tickBtn(c,m));
     if(open&&ed){
       btns.push(`<button class="btn sm ${m.assigned?'':'primary'}" data-act="assign" data-case="${c.id}" data-mv="${m.id}">${m.assigned?'Change':'Assign'}</button>`);
       if(m.assigned)btns.push(`<button class="btn sm ${dt(m)<Date.now()?'primary':''}" data-act="complete" data-case="${c.id}" data-mv="${m.id}">Record completion</button>`);
       btns.push(`<button class="btn sm danger" data-act="cancel-mv" data-case="${c.id}" data-mv="${m.id}">Cancel</button>`);
     }
+    if(m.status!=='Cancelled'&&ed){btns.push(`<button class="btn sm" data-act="edit-mv" data-case="${c.id}" data-mv="${m.id}">Edit flight</button>`);btns.push(`<button class="btn sm" data-act="return-mv" data-case="${c.id}" data-mv="${m.id}">Add return</button>`);}
     return `<tr><td><div class="chipboard" style="display:inline-flex"><b>${esc(m.time)}</b><span>${dmy(m.date)}</span></div></td>
-      <td><span class="mono" style="font-weight:700">${esc(m.flight)}</span><div class="small muted mono">${esc(m.route)}</div><div class="small muted">${m.type}${m.scope==='Domestic'?' · Domestic':''}</div></td>
+      <td><span class="mono" style="font-weight:700">${esc(m.flight)}</span><div class="small muted mono">${esc(m.route)}</div><div class="small muted">${m.type}${m.scope==='Domestic'?' · Domestic':''}</div><a class="small flightlink" href="${statusUrl(m.flight)}" target="_blank" rel="noopener">Flight status ↗</a></td>
       <td>${attHtml(m)||'<span class="muted">–</span>'}${m.status==='Done'?`<div class="small" style="margin-top:6px">Attended ${esc(m.actualTime)} · ${esc(m.outcome)}${m.remarks?'. '+esc(m.remarks):''}</div>`:''}${m.status==='Cancelled'&&m.remarks?`<div class="small muted">${esc(m.remarks)}</div>`:''}</td>
-      <td>${pill(mvStatus(m))}<div class="small muted" style="margin-top:6px">${open?rel(dt(m).getTime()):''}</div></td>
+      <td>${soonPill(m)||pill(mvStatus(m))}<div class="small muted" style="margin-top:6px">${open?rel(dt(m).getTime()):''}</div></td>
       ${ed?`<td><div class="btnrow">${btns.join('')}</div></td>`:''}</tr>`;}).join('');
   const letter=fileThumb(c,'letter');
   return `
@@ -897,11 +1079,11 @@ function vCase(id){
       ${ed?`<div class="btnrow">${st===0?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward to both sections</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
     <ol class="steps" aria-label="Progress">${steps}</ol>
   </section>
-  <section class="card flush"><div class="cardhead"><h2>Flights</h2><span class="small muted">${esc(rule(c.tier).note)}</span></div>
+  <section class="card flush"><div class="cardhead"><div><h2>Flights</h2><span class="small muted">${esc(rule(c.tier).note)}</span></div>${ed?`<button class="btn sm" data-act="add-mv" data-case="${c.id}">+ Add flight</button>`:''}</div>
     <div class="scroll"><table class="mvtable"><thead><tr><th>Time</th><th>Flight</th><th>Attended by</th><th>Status</th>${ed?'<th></th>':''}</tr></thead><tbody>${rows}</tbody></table></div></section>
   <div class="grid2">
     <section class="card"><div class="cardhead"><h2>Protocol details</h2></div><dl class="kv">
-      <dt>Contact</dt><dd class="${c.contact?'':'missing'}">${esc(c.contact||'Not given')}</dd>
+      <dt>Contact</dt><dd class="${c.contact?'':'missing'}">${c.contact?contactHtml(c.contact):'Not given'}</dd>
       <dt>Grade</dt><dd>${c.grade?'Grade-'+esc(c.grade):'Not stated'}</dd>
       <dt>Persons</dt><dd>${esc(c.guests||'–')}</dd>
       <dt>Vehicles</dt><dd>${esc(c.vehicles||'–')}</dd></dl></section>
@@ -926,7 +1108,7 @@ function vReports(){
   const catCls=name=>{const r=S.rules.find(x=>x.name===name);return r?CATCLS[r.tier]:'';};
   return `
   <div class="pagehead"><div><div class="eyebrow">Monthly report</div><h1 style="margin-top:8px">${label}</h1><p>Counts are flights: one arrival or one departure.</p></div>
-    <label class="f" for="rep-month" style="min-width:180px">Month<input type="month" id="rep-month" value="${repMonth}"></label></div>
+    <div class="btnrow" style="align-items:end"><label class="f" for="rep-month" style="min-width:180px">Month<input type="month" id="rep-month" value="${repMonth}"></label><button class="btn" data-act="print">Print / PDF</button><button class="btn" data-act="dl-month">Download Excel</button></div></div>
   <section class="sched repsum"><div class="schead"><span>${label}</span></div>
     <div class="stats"><div class="stat hot"><span class="n">${rows.length}</span><span class="l">Total protocols this month</span></div><div class="stat"><span class="n">${doneR.length}</span><span class="l">Completed</span></div></div>
     <div class="meter" aria-hidden="true"><span style="width:${rows.length?Math.round(doneR.length/rows.length*100):0}%"></span></div>
@@ -955,6 +1137,8 @@ function vSettings(){
   </form>
   <section class="card"><div class="cardhead"><h2>Logo</h2></div><p class="small muted" style="margin:0 0 10px">Upload the HSIA logo. It is shown to everyone who uses the registry.</p>
     <div class="btnrow"><input type="file" id="logoFile" accept="image/*" style="max-width:320px">${S.logo?'<button class="btn sm" data-act="logo-reset">Remove logo</button>':''}</div></section>
+  <section class="card"><div class="cardhead"><h2>Backup</h2></div><p class="small muted" style="margin:0 0 10px">Download every protocol ever entered as one Excel file. Keep a copy each month.</p><button class="btn" data-act="backup">Download full backup</button></section>
+  <section class="card"><div class="cardhead"><h2>Account</h2></div><p class="small muted" style="margin:0 0 10px">Signed in with the doctors' account.</p><button class="btn danger" data-act="signout">Sign out</button></section>
 `;
 }
 
@@ -971,6 +1155,47 @@ function mAssign(c,m){
     ${mBtns(m.assigned?'Save':'Assign')}</form>`,b=>{
     $('#mf',b).onsubmit=e=>{e.preventDefault();const v=$('#a-who').value;const was=m.assigned;m.attendBy=v;m.assigned=true;
       addLog(c,`${m.flight} ${was?'reassigned':'assigned'} to ${WHO[v]}`);save(c);closeModal();render();toast(m.flight+' assigned to '+WHO[v]);};});
+}
+function mFlight(c,m,preset){
+  const isNew=!m,v=m||preset||{date:todayStr()};
+  openModal(`<form class="formsec" id="mf">${mHead(isNew?(preset&&preset.route?'Add return flight':'Add flight'):'Edit flight '+m.flight,esc(c.vipName+', '+c.designation))}
+    <div class="fgrid" data-row>${flightFields(uid('e'),v)}</div>${flightDatalist()}
+    <div class="err" id="fl-err"></div>${mBtns(isNew?'Add flight':'Save changes')}</form>`,b=>{
+    $('#mf',b).onsubmit=e=>{e.preventDefault();const x=readRow($('[data-row]',b));
+      if(!x.date||!x.time||!x.flight){$('#fl-err').textContent='Date, time and flight are needed.';return;}
+      if(isNew){c.movements.push(mv(Object.assign(x,{attendBy:handlerOf(c.tier)})));addLog(c,`Flight added: ${x.flight} ${dmy(x.date)} ${x.time}`);}
+      else{const ch=[];['date','time','flight','route','type','scope'].forEach(k=>{if(m[k]!==x[k])ch.push(`${k} ${k==='date'?dmy(m[k]):m[k]||'–'} → ${k==='date'?dmy(x[k]):x[k]||'–'}`);});
+        if(!ch.length){closeModal();return;}Object.assign(m,x);addLog(c,`${m.flight} changed: ${ch.join(', ')}`);}
+      save(c);closeModal();render();toast(isNew?'Flight added':'Flight updated');};});
+}
+function summaryText(kind){
+  const T=todayStr(),M=tomorrowStr(),now=Date.now();let list=allMv().filter(x=>x.m.status!=='Cancelled'),title;
+  if(kind==='tomorrow'){list=list.filter(x=>x.m.date===M);title='Tomorrow, '+dmy(M);}
+  else if(kind==='24h'){list=list.filter(x=>{const t=dt(x.m).getTime();return t>=now-36e5&&t<=now+24*36e5;});title='Next 24 hours (from '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+')';}
+  else{list=list.filter(x=>x.m.date===T);title='Today, '+dmy(T);}
+  list.sort((a,b)=>dt(a.m)-dt(b.m));
+  const L=['*HSIA Airport Health Office*','*Protocols: '+title+'*',''];
+  if(!list.length)L.push('No protocols.');
+  list.forEach(({c,m},i)=>{L.push(`${i+1}. ${m.status==='Done'?'✅ ':''}*${m.time}* ${m.type==='Arrival'?'ARR':'DEP'} ${m.flight}${m.route?' ('+m.route+')':''}`);
+    L.push(`    ${c.vipName}, ${c.designation}${c.org?', '+c.org:''} [${catName(c.tier)}]`);
+    L.push(`    Attended by: ${m.assigned||m.status==='Done'?WHO[m.attendBy]:'Not assigned'}${c.contact?' | Contact: '+c.contact:''}`);
+    if(c.vehicles)L.push('    Vehicles: '+c.vehicles);L.push('');});
+  L.push(`Total ${list.length} · Done ${list.filter(x=>x.m.status==='Done').length}`);
+  return L.join('\n');
+}
+function mShare(){
+  const opts=[['today','Today'],['tomorrow','Tomorrow'],['24h','Next 24 hours']];
+  openModal(`<div class="formsec">${mHead('Share summary','For the duty WhatsApp group or shift handover')}
+    <div class="chips" role="group" aria-label="Period">${opts.map(([k,l],i)=>`<button type="button" class="chipf" data-sum="${k}" aria-pressed="${i===0}">${l}</button>`).join('')}</div>
+    <textarea id="sumtext" class="mono small" style="min-height:240px" readonly></textarea>
+    <div class="btnrow"><a class="btn primary" id="wa" target="_blank" rel="noopener">Open WhatsApp</a><button type="button" class="btn" data-act="copy-sum">Copy</button><button type="button" class="btn" data-act="close">Close</button></div></div>`,b=>setSummary('today'));
+}
+function setSummary(kind){const t=summaryText(kind);const ta=$('#sumtext');if(!ta)return;ta.value=t;$('#wa').href='https://wa.me/?text='+encodeURIComponent(t);$$('[data-sum]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.sum===kind?'true':'false'));}
+function mDup(dups){
+  openModal(`<div class="formsec">${mHead('Possible duplicate','This flight on this date is already in the registry:')}
+    <div class="formsec">${dups.map(({c,m})=>`<a class="act" href="#case-${c.id}" data-act="close"><span class="dot"></span><div><div class="what">${esc(m.flight)} · ${dmy(m.date)} ${esc(m.time)}</div><div class="ctx">${esc(c.vipName)} · ${esc(c.designation)}</div></div><span class="when">Open</span></a>`).join('')}</div>
+    <p class="small muted" style="margin:0">If this letter is a copy of the same protocol, open the existing one instead. If it is a different official on the same flight, save anyway.</p>
+    <div class="btnrow"><button type="button" class="btn primary" data-act="dup-save">Save anyway</button><button type="button" class="btn" data-act="close">Go back</button></div></div>`);
 }
 function mComplete(c,m){
   openModal(`<form class="formsec" id="mf">${mHead('Record completion · '+m.flight,`${esc(c.vipName)} · ${dmy(m.date)} ${esc(m.time)} · ${WHO[m.attendBy]}`)}
@@ -999,19 +1224,19 @@ function mAck(c,k){
   openModal(`<form class="formsec" id="mf">${mHead('Signed copy · '+SEC[k],whoLine(c))}
     <div class="fgrid"><label class="f" for="k-by">Received by (name, designation)<input id="k-by" placeholder="Protocol Officer (duty)"></label>
     <label class="f" for="k-at">Received at<input id="k-at" type="datetime-local" value="${nowStamp().replace(' ','T')}"></label>
-    <label class="f wide" for="k-file">Photo of the signed copy<input id="k-file" type="file" accept="image/*,application/pdf"></label></div>
+    <div class="wide">${fileField('k-file','Photo of the signed copy')}</div></div>
     <div class="err" id="k-err"></div>${mBtns('Save')}</form>`,b=>{
     $('#mf',b).onsubmit=async e=>{e.preventDefault();const by=$('#k-by').value.trim();if(!by){$('#k-err').textContent='Enter who signed the received copy.';return;}
-      try{await storeFile(c,'ack_'+k,$('#k-file'));}catch(er){$('#k-err').textContent=er.message;return;}
+      try{await storeFile(c,'ack_'+k,PICK['k-file']);}catch(er){$('#k-err').textContent=er.message;return;}
       c.fwd[k].ackBy=by;c.fwd[k].ackAt=($('#k-at').value||nowStamp()).replace('T',' ').slice(0,16);
       addLog(c,'Signed copy filed from '+SEC[k]+' ('+by+')');save(c);closeModal();render();toast('Signed copy recorded');};});
 }
 function mAttach(c){
   openModal(`<form class="formsec" id="mf">${mHead('Attach protocol letter',whoLine(c))}
-    <label class="f" for="l-file">Photo or PDF of the letter<input id="l-file" type="file" accept="image/*,application/pdf"></label>
+    ${fileField('l-file','Photo or PDF of the letter')}
     <div class="err" id="l-err"></div>${mBtns('Attach')}</form>`,b=>{
-    $('#mf',b).onsubmit=async e=>{e.preventDefault();if(!($('#l-file').files||[]).length){$('#l-err').textContent='Choose a file first.';return;}
-      const had=!!(c.files.letter&&c.files.letter.id);let f;try{f=await storeFile(c,'letter',$('#l-file'));}catch(er){$('#l-err').textContent=er.message;return;}addLog(c,(had?'Protocol letter replaced: ':'Protocol letter attached: ')+f.name);save(c);closeModal();render();toast('Letter attached');};});
+    $('#mf',b).onsubmit=async e=>{e.preventDefault();if(!PICK['l-file']){$('#l-err').textContent='Take a photo or choose a file first.';return;}
+      const had=!!(c.files.letter&&c.files.letter.id);let f;try{f=await storeFile(c,'letter',PICK['l-file']);}catch(er){$('#l-err').textContent=er.message;return;}addLog(c,(had?'Protocol letter replaced: ':'Protocol letter attached: ')+f.name);save(c);closeModal();render();toast('Letter attached');};});
 }
 function mEdit(c){
   openModal(`<form class="formsec" id="mf">${mHead('Edit protocol details')}
@@ -1052,12 +1277,8 @@ async function mFile(c,key){
 /* ---------- sign in ---------- */
 let loginRole='doctor';
 function vLogin(){
-  return `<section class="card login"><div><div class="eyebrow">Airport Health Office</div><h1 style="margin-top:8px">Sign in</h1><p class="muted" style="margin:6px 0 0">Choose your role and enter the office password.</p></div>
+  return `<section class="card login"><div><div class="eyebrow">Airport Health Office</div><h1 style="margin-top:8px">Sign in</h1><p class="muted" style="margin:6px 0 0">Enter the doctors' office password.</p></div>
     <form id="loginForm" class="formsec" novalidate>
-      <div class="rolepick" role="group" aria-label="Role">
-        <button type="button" data-role="doctor" aria-pressed="${loginRole==='doctor'}"><b>Doctor</b><small>Chief Airport Health Officer and doctors · full access</small></button>
-        <button type="button" data-role="si" aria-pressed="${loginRole==='si'}"><b>Sanitary Inspector</b><small>View only</small></button>
-      </div>
       <label class="f" for="pw">Password<input id="pw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
       <div class="err" id="loginErr" role="alert"></div>
       <button class="btn primary" type="submit" id="loginBtn">Sign in</button>
@@ -1080,7 +1301,7 @@ function paintTabs(nav){
   if(!USER){$('#tabs').innerHTML='<a aria-current="page">Sign in</a>';return;}
   const crit=canEdit()&&READY?actionItems().filter(i=>i.sev==='crit').length:0;
   $('#tabs').innerHTML=tabsFor().map(([k,l])=>`<a href="#${k}" aria-current="${nav===k?'page':'false'}">${l}${k==='today'&&crit?` <span class="count">${crit}</span>`:''}</a>`).join('')
-    +(canEdit()?`<a class="cta" href="#new" aria-current="${nav==='new'?'page':'false'}">+ New protocol</a>`:'')
+    +(canEdit()?`<a class="cta" href="#new" aria-current="${nav==='new'?'page':'false'}"><span class="lg">+ New protocol</span><span class="sm">+ New</span></a>`:'')
     +`<button type="button" class="signout${canEdit()?'':' push'}" data-act="signout">Sign out</button>`;
 }
 function render(){
@@ -1091,17 +1312,25 @@ function render(){
   const nav=currentNav();
   if(nav==='register')needMonth(regF.month);
   if(nav==='reports')needMonth(repMonth);
-  $('#view').innerHTML=h.startsWith('case-')?vCase(h.slice(5)):VIEWS[nav]();
+  const HINT={'permission-denied':'The database refused this account. In Firebase → Firestore → Rules, check the rules were pasted in full and Published, and that the e-mails in the rules match the users exactly.',
+    'failed-precondition':'The Firestore database is not ready. In Firebase → Databases & Storage → Firestore, check a database named (default) exists.',
+    'not-found':'No Firestore database named (default) was found in this project. Create it under Databases & Storage → Firestore with Database ID (default).',
+    'unavailable':'Firebase could not be reached. Check the internet connection.'};
+  const errBox=LOADERR?`<div class="card" style="border-color:var(--vvip)"><h2 style="color:var(--vvip)">Could not load protocols</h2><p style="margin:8px 0 0">${esc(HINT[LOADERR.code]||'Firebase returned an error.')}</p><p class="small muted mono" style="margin:8px 0 0;overflow-wrap:anywhere">Code: ${esc(LOADERR.code)} · ${esc(LOADERR.msg).slice(0,300)}</p></div>`:'';
+  $('#view').innerHTML=errBox+(h.startsWith('case-')?vCase(h.slice(5)):VIEWS[nav]());
   paintTabs(nav);
   renderBoard();
+  const pd=$('#printdate');if(pd)pd.textContent=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   if(nav==='new'){['#f-des','#f-grade','#f-ben'].forEach(s=>$(s).addEventListener('input',updateCatBox));updateCatBox();}
 }
 window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
 
 /* ---------- events ---------- */
 document.addEventListener('click',async e=>{
-  const tr=e.target.closest('tr[data-href]');if(tr&&!e.target.closest('a,button')){location.hash=tr.dataset.href;return;}
+  const tr=e.target.closest('tr[data-href],.mv[data-href]');if(tr&&!e.target.closest('a,button')){location.hash=tr.dataset.href;return;}
   const rp=e.target.closest('[data-role]');if(rp){loginRole=rp.dataset.role;$$('[data-role]').forEach(x=>x.setAttribute('aria-pressed',x===rp?'true':'false'));const pw=$('#pw');if(pw)pw.focus();return;}
+  const cf=e.target.closest('[data-catf]');if(cf){dashCat=cf.dataset.catf;render();return;}
+  const sm=e.target.closest('[data-sum]');if(sm){setSummary(sm.dataset.sum);return;}
   const dk=e.target.closest('[data-dash]');if(dk){dashF=dk.dataset.dash;render();return;}
   const el=e.target.closest('[data-act]');
   if(!el){if(e.target.id==='modal')closeModal();return;}
@@ -1109,11 +1338,26 @@ document.addEventListener('click',async e=>{
   if(a==='close'){closeModal();return;}
   if(a==='signout'){stopData();Backend.signOut();return;}
   if(a==='view-file'){mFile(c,el.dataset.key);return;}
+  if(a==='print'){window.print();return;}
+  if(a==='dl-csv'){downloadText('HSIA-protocols-'+(regF.q.trim()?'search':regF.month||'all')+'.csv',csvOf(regRows()));return;}
+  if(a==='dl-month'){downloadText('HSIA-protocols-'+repMonth+'.csv',csvOf(allMv().filter(x=>x.m.date.startsWith(repMonth)).sort((p,q)=>dt(p.m)-dt(q.m))));return;}
+  if(a==='share'){mShare();return;}
+  if(a==='copy-sum'){const t=$('#sumtext').value;try{await navigator.clipboard.writeText(t);toast('Summary copied');}catch(err){const ta=$('#sumtext');ta.focus();ta.select();toast('Select all and copy');}return;}
+  if(a==='backup'){if(!Backend.loadAll){toast('Backup is not available.');return;}el.disabled=true;el.textContent='Preparing…';
+    Backend.loadAll().then(list=>{list.forEach(x=>{if(!LIVE.has(x.id))ARCH.set(x.id,x);});rebuild();ALL_LOADED=true;
+      downloadText('HSIA-protocols-backup-'+todayStr()+'.csv',csvOf(allMv().sort((p,q)=>dt(p.m)-dt(q.m))));el.disabled=false;el.textContent='Download full backup';})
+    .catch(()=>{el.disabled=false;el.textContent='Download full backup';toast('Could not prepare the backup.');});return;}
   if(a==='copy-csv'){const t=csv();try{await navigator.clipboard.writeText(t);toast('Copied '+regRows().length+' rows. Paste into Excel.');}
     catch(err){openModal(`${mHead('Copy the register','Select all and copy, then paste into Excel.')}<textarea style="min-height:220px" class="mono small" readonly>${esc(t)}</textarea><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`,b=>{const ta=$('textarea',b);ta.focus();ta.select();});}
     return;}
   if(!canEdit())return;
-  if(a==='assign')mAssign(c,m);
+  if(a==='tick')toggleDone(c,m);
+  else if(a==='edit-mv')mFlight(c,m);
+  else if(a==='add-mv')mFlight(c,null);
+  else if(a==='return-mv')mFlight(c,null,Object.assign(returnOf(m),{date:''}));
+  else if(a==='add-return'){const rows=$$('[data-row]');const last=readRow(rows[rows.length-1]);$('#mvRows').insertAdjacentHTML('beforeend',mvRowHtml(returnOf(last)));}
+  else if(a==='dup-save'){closeModal();const f=$('#newForm');if(f){f.dataset.force='1';f.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));}}
+  else if(a==='assign')mAssign(c,m);
   else if(a==='complete')mComplete(c,m);
   else if(a==='cancel-mv')mCancel(c,m);
   else if(a==='forward')mForward(c);
@@ -1127,15 +1371,19 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!$('#modal').hidden)closeModal();
-  if(e.key==='Enter'&&e.target.matches('tr[data-href]'))location.hash=e.target.dataset.href;
+  if(e.key==='Enter'&&e.target.matches('tr[data-href],.mv[data-href]'))location.hash=e.target.dataset.href;
 });
 document.addEventListener('input',e=>{
   const t=e.target;
-  if(t.id==='rf-q'){regF.q=t.value;$('#regTable').innerHTML=regTable();}
+  if(t.id==='rf-q'){regF.q=t.value;if(t.value.trim())needAll();const n=$('#rf-note');if(n)n.textContent=t.value.trim()?'Searching all months.':'Type in Search to look across all months.';$('#regTable').innerHTML=regTable();}
+  if(t.name==='flight'&&t.closest('[data-row]')){const pl=$('[name=place]',t.closest('[data-row]'));if(pl&&!pl.value.trim()&&routeFor(t.value))rowAuto(t.closest('[data-row]'),'flight');}
   if(t.id==='r-test'){const r=classify(t.value,'','Self');$('#r-testout').innerHTML=t.value?`${catBadge(r.tier)} <span style="margin-left:6px">${esc(r.reason)}. Attended by ${WHO[rule(r.tier).handler]}.</span>`:'Grade-1 and Grade-2 officers are always at least VIP.';}
 });
 document.addEventListener('change',async e=>{
   const t=e.target;
+  if(t.dataset&&t.dataset.pick){PICK[t.dataset.pick]=t.files&&t.files[0]||null;const box=document.getElementById(t.dataset.pick);if(box)$('.fname',box).textContent=PICK[t.dataset.pick]?PICK[t.dataset.pick].name:'No file chosen';return;}
+  if((t.name==='flight'||t.name==='place'||t.name==='type')&&t.closest('[data-row]')){rowAuto(t.closest('[data-row]'),t.name);return;}
+  if(t.id==='f-name'){const p=personFor(t.value);if(p){let n=0;[['#f-des','designation'],['#f-org','org'],['#f-contact','contact']].forEach(([s,k])=>{const el=$(s);if(el&&!el.value.trim()&&p[k]){el.value=p[k];n++;}});const g=$('#f-grade');if(g&&!g.value&&p.grade){g.value=p.grade;n++;}if(n){updateCatBox();toast('Details filled in from an earlier protocol');}}return;}
   if(['rf-month','rf-type','rf-status','rf-cat'].includes(t.id)){regF[t.id.slice(3)]=t.value;if(t.id==='rf-month')needMonth(t.value);$('#regTable').innerHTML=regTable();}
   else if(t.id==='rep-month'){repMonth=t.value||repMonth;render();}
   else if(t.id==='logoFile'&&canEdit()){try{const f=await prepareFile(t,360);if(f&&/^image\//.test(f.type)){S.logo=f.data;saveSettings();paintLogo();render();toast('Logo updated for everyone');}else toast('Choose an image file.');}catch(er){toast(er.message);}}
@@ -1144,15 +1392,17 @@ document.addEventListener('submit',async e=>{
   const f=e.target;
   if(f.id==='newForm'){
     e.preventDefault();if(!canEdit())return;const err=$('#formErr');const v=id=>$(id).value.trim();
-    const rows=$$('[data-row]').map(r=>({type:$('[name=type]',r).value,scope:$('[name=scope]',r).value,date:$('[name=date]',r).value,time:$('[name=time]',r).value,flight:$('[name=flight]',r).value.trim().toUpperCase(),route:$('[name=route]',r).value.trim()}));
+    const rows=$$('#mvRows [data-row]').map(readRow);
     const miss=[];if(!v('#f-name'))miss.push('name');if(!v('#f-des'))miss.push('designation');
     if(rows.some(r=>!r.date||!r.time||!r.flight))miss.push('date, time and flight for every flight row');
     if(miss.length){err.textContent='Fill in: '+miss.join(', ')+'.';return;}
+    if(!f.dataset.force){const dups=[];rows.forEach(r=>allMv().forEach(x=>{if(x.m.status!=='Cancelled'&&fkey(x.m.flight)===fkey(r.flight)&&x.m.date===r.date&&!dups.includes(x))dups.push(x);}));if(dups.length){mDup(dups);return;}}
+    delete f.dataset.force;
     const cl=classify(v('#f-des'),v('#f-grade'),$('#f-ben').value);
     const c=mk({vipName:v('#f-name'),designation:v('#f-des'),org:v('#f-org'),grade:v('#f-grade'),beneficiary:$('#f-ben').value,guests:v('#f-guests'),contact:v('#f-contact'),vehicles:v('#f-veh'),
       tier:cl.tier,tierReason:cl.reason,movements:rows.map(r=>mv(Object.assign(r,{attendBy:handlerOf(cl.tier)})))});
     const btn=f.querySelector('button[type=submit]');btn.disabled=true;
-    let scan=null;try{scan=await storeFile(c,'letter',$('#f-scan'));}catch(er){err.textContent=er.message;btn.disabled=false;return;}
+    let scan=null;try{scan=await storeFile(c,'letter',PICK['f-scan']);}catch(er){err.textContent=er.message;btn.disabled=false;return;}
     addLog(c,'Protocol registered as '+catName(cl.tier));
     if(scan)addLog(c,'Protocol letter attached: '+scan.name);
     save(c);location.hash='case-'+c.id;toast('Protocol saved. Next: forward the letter and assign.');
@@ -1161,8 +1411,8 @@ document.addEventListener('submit',async e=>{
     e.preventDefault();const pw=$('#pw').value;const er=$('#loginErr');const btn=$('#loginBtn');
     if(!pw){er.textContent='Enter the password.';return;}
     btn.disabled=true;btn.textContent='Signing in…';er.textContent='';
-    Backend.signIn(loginRole,pw).catch(x=>{btn.disabled=false;btn.textContent='Sign in';
-      const code=(x&&x.code)||'unknown';const who=loginRole==='doctor'?'Doctor':'Sanitary Inspector';
+    Backend.signIn('doctor',pw).catch(x=>{btn.disabled=false;btn.textContent='Sign in';
+      const code=(x&&x.code)||'unknown';const who='Doctor';
       const MSG={
         'auth/invalid-credential':'Wrong password, or the '+who+' account does not exist in Firebase with the expected email.',
         'auth/wrong-password':'Wrong password for '+who+'.',
@@ -1184,9 +1434,10 @@ document.addEventListener('submit',async e=>{
 });
 
 function boot(){
+  document.body.insertAdjacentHTML('beforeend',airportList());
   render();
   Backend.onAuth(u=>{
-    if(u&&!u.role){Backend.signOut();toast('This account is not set up for the registry.');return;}
+    if(u&&u.role!=='doctor'){Backend.signOut();toast('Only the doctors\' account can use the registry.');return;}
     USER=u;MODE=u?u.role:null;applyMode();
     if(u){READY=false;startData();}else stopData();
     render();
