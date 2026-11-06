@@ -1058,7 +1058,7 @@ function vLogin(){
         <button type="button" data-role="doctor" aria-pressed="${loginRole==='doctor'}"><b>Doctor</b><small>Chief Airport Health Officer and doctors · full access</small></button>
         <button type="button" data-role="si" aria-pressed="${loginRole==='si'}"><b>Sanitary Inspector</b><small>View only</small></button>
       </div>
-      <label class="f" for="pw">Password<input id="pw" type="password" autocomplete="current-password"></label>
+      <label class="f" for="pw">Password<input id="pw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
       <div class="err" id="loginErr" role="alert"></div>
       <button class="btn primary" type="submit" id="loginBtn">Sign in</button>
     </form></section>`;
@@ -1162,7 +1162,21 @@ document.addEventListener('submit',async e=>{
     if(!pw){er.textContent='Enter the password.';return;}
     btn.disabled=true;btn.textContent='Signing in…';er.textContent='';
     Backend.signIn(loginRole,pw).catch(x=>{btn.disabled=false;btn.textContent='Sign in';
-      er.textContent=(x&&/invalid-credential|wrong-password|user-not-found|invalid-login/.test(x.code||''))?'Wrong password for '+(loginRole==='doctor'?'Doctor':'Sanitary Inspector')+'. Try again.':(x&&x.code==='auth/too-many-requests')?'Too many attempts. Wait a few minutes and try again.':'Could not sign in. Check the internet connection.';});
+      const code=(x&&x.code)||'unknown';const who=loginRole==='doctor'?'Doctor':'Sanitary Inspector';
+      const MSG={
+        'auth/invalid-credential':'Wrong password, or the '+who+' account does not exist in Firebase with the expected email.',
+        'auth/wrong-password':'Wrong password for '+who+'.',
+        'auth/user-not-found':'No '+who+' account found in Firebase with the expected email.',
+        'auth/invalid-login-credentials':'Wrong password, or the '+who+' account does not exist in Firebase with the expected email.',
+        'auth/operation-not-allowed':'Email/Password sign-in is switched off in Firebase (Authentication → Sign-in method).',
+        'auth/user-disabled':'This account has been disabled in Firebase.',
+        'auth/too-many-requests':'Too many attempts. Wait a few minutes and try again.',
+        'auth/network-request-failed':'No internet connection. Check the connection and try again.',
+        'auth/invalid-api-key':'The Firebase settings in firebase-config.js are not correct.',
+        'auth/api-key-not-valid.-please-pass-a-valid-api-key.':'The Firebase settings in firebase-config.js are not correct.',
+        'auth/unauthorized-domain':'This website address is not in Firebase Authentication → Settings → Authorized domains.'
+      };
+      er.innerHTML=esc(MSG[code]||'Could not sign in.')+'<div class="small muted" style="margin-top:4px;font-weight:500">Account: '+esc((window.HSIA_ACCOUNTS||{})[loginRole]||'')+' · Code: '+esc(code)+'</div>';});
   }
   else if(f.id==='rulesForm'){
     e.preventDefault();if(!canEdit())return;S.rules=JSON.parse(JSON.stringify(S.rules||defaultRules()));$$('[data-r]',f).forEach(i=>{S.rules[+i.dataset.r][i.dataset.k]=i.value;});S.familyTier=Number($('#r-fam').value);saveSettings();render();toast('Settings saved for everyone');
