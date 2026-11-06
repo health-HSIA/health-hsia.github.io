@@ -302,6 +302,31 @@ details.donegrp[open] summary::after{content:"Hide"}
   .scroll{overflow:visible}
   table.reg{font-size:11px}
 }
+/* batch 3 */
+.overview.noring{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+@media (max-width:1100px){.overview.noring .sched{grid-column:auto}}
+@media (max-width:760px){.overview.noring{grid-template-columns:1fr}}
+.chipboard span{letter-spacing:.1em}
+.gear{position:absolute;z-index:3;top:calc(14px + env(safe-area-inset-top));right:16px;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;color:#e9eef7;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16)}
+.gear:hover,.gear[aria-current="page"]{background:var(--amber);color:#1b1300;border-color:var(--amber)}
+.gear svg{width:21px;height:21px}
+.gear[hidden]{display:none}
+@media (min-width:821px){.hero .board{margin-top:48px}}
+@media (max-width:820px){.hero .idblock{padding-right:52px}}
+.vvipstrip{border-radius:var(--r);border:1.5px solid color-mix(in srgb,var(--vvip) 45%,var(--line));background:linear-gradient(180deg,var(--vvip-soft),var(--surface) 85%);box-shadow:var(--shadow);overflow:hidden}
+.vshead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;font:600 13px var(--body);color:var(--vvip)}
+.vsrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px;border-top:1px solid color-mix(in srgb,var(--vvip) 18%,var(--line));cursor:pointer}
+.vsrow:hover{background:color-mix(in srgb,var(--vvip-soft) 60%,transparent)}
+.vsrow.isdone .vsn,.vsrow.isdone .vst{opacity:.55}
+.vst{display:flex;flex-direction:column;gap:3px;background:var(--board);border-radius:9px;padding:7px 9px;min-width:84px}
+.vst b{font:700 17px/1 var(--mono);color:var(--amber)}
+.vst small{font:700 9px/1 var(--body);letter-spacing:.1em;color:#8c9ab0}
+.vsn{display:flex;flex-direction:column;gap:3px;min-width:0}
+.vsn b{font-weight:700}
+.vsn small{font-size:12.5px;color:var(--muted)}
+.vsa{display:flex;gap:6px;align-items:center}
+@media (max-width:520px){.vsrow{grid-template-columns:auto minmax(0,1fr)}.vsa{grid-column:1/-1;justify-content:flex-end}}
+@media print{.gear,.vsa{display:none!important}}
 /* ---------- category & status ---------- */
 .cat{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--display);font-stretch:115%;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px 5px 8px;border-radius:6px;color:var(--cat-ink);white-space:nowrap}
 .cat::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
@@ -460,6 +485,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:v
 </head>
 <body>
 <header class="hero">
+  <a class="gear" id="gear" href="#settings" aria-label="Settings" title="Settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></a>
   <div class="wrap">
     <div>
       <div class="idblock">
@@ -547,10 +573,22 @@ const ICON={
 
 /* ---------- seed data (fictional) ---------- */
 function defaultRules(){return [
-  {tier:1,name:'VVIP',handler:'Doctor',note:'Duty Doctor attends in person',keywords:'minister, state minister, deputy minister, senior secretary, secretary, speaker, chief whip, standing committee chairman'},
-  {tier:2,name:'VIP',handler:'Doctor',note:'Duty Doctor attends',keywords:'director general, dg, additional director general, additional secretary, vice chancellor, grade-1, grade-2'},
-  {tier:3,name:'Courtesy',handler:'SI',note:'Duty Doctor sends the duty Sanitary Inspector',keywords:'joint secretary, deputy secretary, private secretary, director, line director, programme manager, deputy director'}
+  {tier:1,name:'Ministerial',handler:'Doctor',note:'Ministerial / constitutional office holder. Duty Doctor attends in person'},
+  {tier:2,name:'VIP',handler:'Doctor',note:'Grade-1 to Grade-3. Duty Doctor attends'},
+  {tier:3,name:'Courtesy',handler:'SI',note:'Grade-4 and below. Duty Doctor sends the duty Sanitary Inspector'}
 ];}
+const RANKS=[['MIN','Ministerial / Constitutional'],['1','Grade-1'],['2','Grade-2'],['3','Grade-3'],['4','Grade-4 or below']];
+const RANK_TIER={MIN:1,'1':2,'2':2,'3':2,'4':3};
+function defaultRankKw(){return {
+  MIN:'minister, state minister, deputy minister, prime minister, chief adviser, special assistant to the prime minister, adviser to the prime minister, advisor to the prime minister, speaker, deputy speaker, chief justice, chief whip, whip, member of parliament, mp, attorney general, comptroller and auditor general, public service commission, anti-corruption commission, anti corruption commission, election commission, chief election commissioner, election commissioner, human rights commission, information commission, standing committee chairman',
+  '1':'secretary, senior secretary, principal secretary, cabinet secretary, director general, dg, vice chancellor, vice-chancellor',
+  '2':'additional secretary, principal, additional director general, adg, pro-vice chancellor, pro vice chancellor',
+  '3':'director, line director, joint secretary, professor',
+  '4':'deputy secretary, senior assistant secretary, assistant secretary, deputy director, assistant director, associate professor, assistant professor, programme manager, deputy programme manager, private secretary, personal secretary, assistant private secretary, civil surgeon, medical officer, officer'
+};}
+const normGrade=g=>{g=String(g||'');if(g==='VVIP')return 'MIN';if(['5','6'].includes(g))return '4';return RANK_TIER[g]?g:'';};
+const rankLabel=g=>{const r=RANKS.find(x=>x[0]===normGrade(g));return r?r[1]:'';};
+const rankOptions=sel=>`<option value="">Not stated</option>${RANKS.map(([v,l])=>`<option value="${v}"${normGrade(sel)===v?' selected':''}>${l}</option>`).join('')}`;
 function mk(o){
   const c=Object.assign({id:uid('c'),files:{},log:[],fwd:{protocol:{},vip:{}},grade:'',guests:'',vehicles:'',contact:'',beneficiary:'Self',tierReason:''},o);
   c.movements.forEach(m=>{if(!m.attendBy)m.attendBy=c.tier<=2?'Doctor':'SI';});
@@ -563,7 +601,7 @@ const L=(d,t,text)=>({at:stamp(d,t),by:'Duty Doctor',text});
 /* ---------- state ---------- */
 /* Data lives in Firebase (Firestore). LIVE holds protocols with a flight in the last 45 days or later
    (kept in sync in real time); ARCH holds older months loaded on demand for the register and reports. */
-let S={cases:[],rules:defaultRules(),familyTier:3,logo:null};
+let S={cases:[],rules:defaultRules(),rankKw:defaultRankKw(),logo:null};
 const LIVE=new Map(),ARCH=new Map(),FILES=new Map(),MONTHS=new Set();
 let pendingRender=false,unsubs=[],LOADERR=null,ALL_LOADED=false,LK={flights:{},people:{}};
 const LIVE_DAYS=45;
@@ -631,13 +669,13 @@ function downloadText(name,text){
   catch(e){openModal(`${mHead('Copy the data','Select all and copy, then paste into Excel.')}<textarea style="min-height:220px" class="mono small" readonly>${esc(text)}</textarea><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`);}
 }
 function csvOf(list){
-  const head=['Date','Time','Actual time','Arr/Dep','Scope','Flight','Route','Name','Designation','Office','Beneficiary','Contact','Vehicles','Category','Attended by','Status','Remarks'];
+  const head=['Date','Time','Actual time','Arr/Dep','Scope','Flight','Route','Name','Designation','Office','Beneficiary','Contact','Vehicles','Category','Grade/Status','Attended by','Status','Remarks'];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  return [head.map(q).join(',')].concat(list.map(({c,m})=>[dmy(m.date),m.time,m.actualTime,m.type,m.scope,m.flight,m.route,c.vipName,c.designation,c.org,c.beneficiary==='Family/Guest'?c.guests:'Self',c.contact,c.vehicles,catName(c.tier),m.assigned||m.status==='Done'?WHO[m.attendBy]:'Not assigned',mvStatus(m)[0],m.remarks].map(q).join(','))).join('\n');
+  return [head.map(q).join(',')].concat(list.map(({c,m})=>[dmy(m.date),m.time,m.actualTime,m.type,m.scope,m.flight,m.route,c.vipName,c.designation,c.org,c.beneficiary==='Family/Guest'?c.guests:'Self',c.contact,c.vehicles,catName(c.tier),rankLabel(rankOf(c)),m.assigned||m.status==='Done'?WHO[m.attendBy]:'Not assigned',mvStatus(m)[0],m.remarks].map(q).join(','))).join('\n');
 }
 function saveSettings(){
   if(!canEdit())return;
-  Backend.saveSettings({rules:S.rules,familyTier:S.familyTier,logo:S.logo||null}).catch(err=>{console.error(err);toast('Could not save settings.');});
+  Backend.saveSettings({rulesVersion:2,rules:S.rules,rankKw:S.rankKw,logo:S.logo||null}).catch(err=>{console.error(err);toast('Could not save settings.');});
 }
 function refreshSoon(){
   const nav=currentNav();
@@ -655,7 +693,7 @@ function startData(){
   unsubs.forEach(u=>{try{u();}catch(e){}});
   unsubs=[
     Backend.watchRecent(addDays(-LIVE_DAYS),list=>{LOADERR=null;LIVE.clear();list.forEach(c=>LIVE.set(c.id,c));rebuild();READY=true;refreshSoon();},err=>{console.error(err);READY=true;LOADERR={code:(err&&err.code)||'unknown',msg:(err&&err.message)||''};render();}),
-    Backend.watchSettings(d=>{S.rules=(d&&d.rules)||defaultRules();S.familyTier=(d&&d.familyTier)||3;S.logo=(d&&d.logo)||null;paintLogo();refreshSoon();}),
+    Backend.watchSettings(d=>{S.rules=(d&&d.rulesVersion===2&&d.rules)||defaultRules();S.rankKw=(d&&d.rulesVersion===2&&d.rankKw)||defaultRankKw();S.logo=(d&&d.logo)||null;paintLogo();refreshSoon();}),
     Backend.watchLookups?Backend.watchLookups(d=>{LK.flights=(d&&d.flights)||{};LK.people=(d&&d.people)||{};}):()=>{}
   ];
 }
@@ -669,19 +707,25 @@ const catName=t=>rule(t).name;
 function addLog(c,text){c.log.push({at:nowStamp(),by:'Duty Doctor',text});}
 
 /* ---------- category rules ---------- */
-function classify(designation,grade,beneficiary){
-  if(beneficiary==='Family/Guest')return {tier:Number(S.familyTier),reason:'Family member or guest of an official'};
+function inferRank(designation){
   const d=' '+String(designation||'').toLowerCase().replace(/[^a-z0-9\-]+/g,' ')+' ';
-  let best=null;
-  S.rules.forEach(r=>r.keywords.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean).forEach(k=>{
+  let best=null;const kw=S.rankKw||defaultRankKw();
+  Object.keys(RANK_TIER).forEach(rk=>String(kw[rk]||'').split(',').map(k=>k.trim().toLowerCase()).filter(Boolean).forEach(k=>{
     const re=new RegExp('[^a-z0-9]'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'[^a-z0-9]+')+'[^a-z0-9]');
-    if(re.test(d)&&(!best||k.length>best.k.length))best={k,tier:r.tier};
+    if(re.test(d)&&(!best||k.length>best.k.length))best={k,rank:rk};
   }));
-  let out=best?{tier:best.tier,reason:'Matched “'+best.k+'”'}:{tier:3,reason:'No rule matched, so Courtesy applies'};
-  const g=parseInt(grade,10);
-  if((g===1||g===2)&&out.tier>2)out={tier:2,reason:'Grade-'+g+' officer'};
-  return out;
+  return best;
 }
+function classify(designation,grade){
+  const g=normGrade(grade);
+  if(g)return {tier:RANK_TIER[g],rank:g,reason:rankLabel(g)};
+  const b=inferRank(designation);
+  if(b)return {tier:RANK_TIER[b.rank],rank:b.rank,reason:rankLabel(b.rank)+' (from “'+b.k+'”)'};
+  return {tier:3,rank:'',reason:'Rank not known, so Courtesy applies. Set Grade/Status to change it'};
+}
+const rankOf=c=>normGrade(c.grade)||((inferRank(c.designation)||{}).rank)||'';
+const RANK_IDX={MIN:0,'1':1,'2':2,'3':3,'4':4,'':5};
+const mvCmp=(a,b)=>(dt(a.m)-dt(b.m))||(Number(a.c.tier)-Number(b.c.tier))||(RANK_IDX[rankOf(a.c)]-RANK_IDX[rankOf(b.c)]);
 
 /* ---------- status ---------- */
 function caseStage(c){
@@ -744,7 +788,7 @@ function mvCard({c,m}){
   const cls=CATCLS[Number(c.tier)];
   const mins=(dt(m)-Date.now())/6e4,soon=m.status==='Open'&&mins>=0&&mins<=60;
   return `<div class="mv ${cls}${m.status==='Done'?' isdone':''}${soon?' soon':''}" data-href="#case-${c.id}" tabindex="0" role="link">
-    <div class="chipboard"><b>${esc(m.time)}</b><span>${m.type==='Arrival'?'ARR':'DEP'}${m.scope==='Domestic'?' · DOM':''}</span></div>
+    <div class="chipboard"><b>${esc(m.time)}</b><span>${m.type==='Arrival'?'ARRIVAL':'DEPARTURE'}</span>${m.scope==='Domestic'?'<span>DOMESTIC</span>':''}</div>
     <div><div class="fl"><span class="mono">${esc(m.flight)}</span><span class="rt">${esc(m.route)}</span></div>
       <div class="nm">${esc(c.vipName)}${c.beneficiary==='Family/Guest'?' <span class="muted small" style="font-weight:500">(family / guests)</span>':''}</div>
       <div class="ds">${esc(c.designation)}${c.org?', '+esc(c.org):''}</div>
@@ -811,7 +855,7 @@ function renderBoard(){
   const now=Date.now();
   let list=allMv().filter(x=>x.m.status==='Open'&&dt(x.m).getTime()>=now);
   if(MODE==='si')list=list.filter(x=>x.m.assigned&&x.m.attendBy==='SI');
-  list.sort((a,b)=>dt(a.m)-dt(b.m));
+  list.sort(mvCmp);
   const b=$('#board');const x=USER&&READY?list[0]:null;
   if(!USER){b.removeAttribute('href');b.innerHTML=`<div class="bl"><span>Next protocol</span></div><div class="none">SIGN IN TO VIEW</div>`;return;}
   if(!x){b.removeAttribute('href');b.innerHTML=`<div class="bl"><span>${MODE==='si'?'Next Sanitary Inspector duty':'Next protocol'}</span></div><div class="none">NO UPCOMING PROTOCOL</div>`;return;}
@@ -841,7 +885,7 @@ const ICON_SHARE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 function dashLists(){
   const now=Date.now(),list=allMv(),T=todayStr(),M=tomorrowStr(),wk=addDays(6);
   const live=x=>x.m.status!=='Cancelled';
-  const sort=a=>a.sort((p,q)=>dt(p.m)-dt(q.m));
+  const sort=a=>a.sort(mvCmp);
   return {
     today:{k:'Schedule',l:'Protocols today',t:'Protocols today',items:sort(list.filter(x=>live(x)&&x.m.date===T))},
     tomorrow:{k:'Schedule',l:'Protocols tomorrow',t:'Protocols tomorrow',items:sort(list.filter(x=>live(x)&&x.m.date===M))},
@@ -877,6 +921,17 @@ function ringCard(done,total,clickable){
     <span class="rl">${total===0?'No protocols today':left===0?'All done for today':left+' still to go'}</span>`;
   return clickable?`<button type="button" class="donecard" data-dash="done" aria-pressed="${dashF==='done'}">${inner}</button>`:`<div class="donecard">${inner}</div>`;
 }
+function vvipStrip(){
+  const T=todayStr();
+  const L=allMv().filter(x=>Number(x.c.tier)===1&&x.m.date===T&&x.m.status!=='Cancelled').sort(mvCmp);
+  if(!L.length)return '';
+  const left=L.filter(x=>x.m.status!=='Done').length;
+  return `<section class="vvipstrip"><div class="vshead"><span class="cat vvip">${esc(catName(1))} today</span><span>${left?left+' to attend':'All attended'} · ${L.length} total</span></div>
+    ${L.map(({c,m})=>`<div class="vsrow${m.status==='Done'?' isdone':''}" data-href="#case-${c.id}" tabindex="0" role="link">
+      <span class="vst"><b>${esc(m.time)}</b><small>${m.type==='Arrival'?'ARRIVAL':'DEPARTURE'}</small></span>
+      <span class="vsn"><b>${esc(c.vipName)}</b><small>${esc(c.designation)} · ${esc(m.flight)}${m.route?' · '+esc(m.route):''}</small></span>
+      <span class="vsa">${soonPill(m)}${callBtn(c)}${tickBtn(c,m)}</span></div>`).join('')}</section>`;
+}
 function vToday(){
   if(MODE==='si')return vTodaySI();
   const D=dashLists(),cur0=D[dashF]||D.week,items=actionItems();
@@ -888,27 +943,26 @@ function vToday(){
   return `
   <div class="pagehead"><div><div class="eyebrow">${longDate(todayStr())}</div><h1 style="margin-top:8px">Today at Airport Health Office, HSIA</h1></div>
     <button class="btn" data-act="share">${ICON_SHARE}Share summary</button></div>
-  <div class="overview">
+  ${vvipStrip()}
+  <div class="overview${D.done.items.length?'':' noring'}">
     ${scheduleCard('Schedule',[{key:'today',n:D.today.items.length,l:'Today',hot:true},{key:'tomorrow',n:D.tomorrow.items.length,l:'Tomorrow'},{key:'week',n:D.week.items.length,l:'This week'}],weekStrip(()=>true),true)}
     <section class="attn"><div class="attnhead"><span class="eyebrow">Needs attention</span><span class="tot ${tot?'':'clear'}">${tot?tot+' open':'All clear'}</span></div>
       ${attn.map(([k,ic,t,sub])=>{const n=D[k].count!=null?D[k].count:D[k].items.length;
         return `<button type="button" class="arow${n?'':' clear'}" data-dash="${k}" aria-pressed="${dashF===k}"><span class="ic">${n?ic:OVI.check}</span><span><span class="t">${t}</span><span class="s">${n?sub:'Nothing pending'}</span></span><span class="n">${n}</span></button>`;}).join('')}
     </section>
-    ${ringCard(D.done.items.length,todayAll.length,true)}
+    ${D.done.items.length?ringCard(D.done.items.length,todayAll.length,true):''}
   </div>
-  <div class="split">
+  <div>
     <section class="card flush"><div class="cardhead"><div class="listtitle"><h2>${esc(cur.t)}</h2><span class="muted small">${cur.items.length} protocol${cur.items.length===1?'':'s'}</span></div>${dashF!=='week'?'<button class="btn sm" data-dash="week">Show this week</button>':''}</div>
       <div class="chiprow">${chips}</div>
       ${grouped(cur.items,dashCat?'No protocols in this category.':'Nothing here.',dashF!=='done')}</section>
-    <section class="card flush"><div class="cardhead"><h2>Needs action</h2><span class="muted small">${items.length}</span></div>
-      ${items.length?items.map(i=>`<a class="act ${i.sev}" href="#case-${i.c.id}"><span class="dot"></span><div><div class="what">${esc(i.text)}</div><div class="ctx">${esc(i.c.vipName)} · ${esc(i.c.designation)}</div></div><span class="when">${rel(i.due)}</span></a>`).join(''):'<div class="empty">Nothing pending.</div>'}</section>
   </div>`;
 }
 function vTodaySI(){
   const T=todayStr(),M=tomorrowStr(),wk=addDays(6),all=allMv().filter(x=>x.m.status!=='Cancelled');
   const isSI=x=>x.m.assigned&&x.m.attendBy==='SI';
   const mine=all.filter(isSI);
-  const s=a=>a.sort((p,q)=>dt(p.m)-dt(q.m));
+  const s=a=>a.sort(mvCmp);
   const t=s(mine.filter(x=>x.m.date===T)),tm=s(mine.filter(x=>x.m.date===M)),w=s(mine.filter(x=>x.m.date>=T&&x.m.date<=wk));
   const allToday=s(all.filter(x=>x.m.date===T)),wAll=s(all.filter(x=>x.m.date>=T&&x.m.date<=wk));
   return `
@@ -934,7 +988,7 @@ function regRows(){
     if(regF.status&&mvStatus(m)[0]!==regF.status)return false;
     if(q&&![c.vipName,c.designation,c.org,m.flight,m.route].join(' ').toLowerCase().includes(q))return false;
     return true;
-  }).sort((a,b)=>dt(a.m)-dt(b.m));
+  }).sort(mvCmp);
 }
 function vRegister(){
   return `
@@ -1021,7 +1075,7 @@ function vNew(){
       <label class="f" for="f-name">Name of official <span class="req">*</span><input id="f-name" list="dl-people" autocomplete="off"></label>
       <label class="f" for="f-des">Designation <span class="req">*</span><input id="f-des" placeholder="Director General"></label>
       <label class="f" for="f-org">Ministry / Directorate<input id="f-org"></label>
-      <label class="f" for="f-grade">Grade<select id="f-grade"><option value="">Not stated</option>${[1,2,3,4,5,6].map(g=>`<option value="${g}">Grade-${g}</option>`).join('')}</select></label>
+      <label class="f" for="f-grade">Grade/Status<select id="f-grade">${rankOptions('')}</select></label>
       <label class="f" for="f-ben">Protocol is for<select id="f-ben"><option value="Self">The official in person</option><option value="Family/Guest">Family members / guests of the official</option></select></label>
       <label class="f" for="f-contact">Contact number<input id="f-contact" type="tel" placeholder="PS / APS mobile"></label>
       <label class="f wide" for="f-guests">Accompanying persons / persons received<input id="f-guests" placeholder="e.g. son, daughter-in-law; daughter accompanying"></label>
@@ -1041,7 +1095,7 @@ function vNew(){
 }
 function updateCatBox(){
   const box=$('#catBox');if(!box)return;
-  const r=classify($('#f-des').value,$('#f-grade').value,$('#f-ben').value);const ru=rule(r.tier);
+  const r=classify($('#f-des').value,$('#f-grade').value);const ru=rule(r.tier);
   box.innerHTML=`${catBadge(r.tier)}<div><b>Attended by ${WHO[ru.handler]}</b><div class="small muted">${esc(r.reason)}. You can change the category after saving.</div></div>`;
 }
 
@@ -1084,7 +1138,7 @@ function vCase(id){
   <div class="grid2">
     <section class="card"><div class="cardhead"><h2>Protocol details</h2></div><dl class="kv">
       <dt>Contact</dt><dd class="${c.contact?'':'missing'}">${c.contact?contactHtml(c.contact):'Not given'}</dd>
-      <dt>Grade</dt><dd>${c.grade?'Grade-'+esc(c.grade):'Not stated'}</dd>
+      <dt>Grade/Status</dt><dd>${esc(rankLabel(rankOf(c))||'Not stated')}${!normGrade(c.grade)&&rankOf(c)?' <span class="small muted">(from designation)</span>':''}</dd>
       <dt>Persons</dt><dd>${esc(c.guests||'–')}</dd>
       <dt>Vehicles</dt><dd>${esc(c.vehicles||'–')}</dd></dl></section>
     <section class="card"><div class="cardhead"><h2>Protocol letter</h2>${ed?`<button class="btn sm" data-act="attach" data-case="${c.id}">${letter?'Replace':'Attach letter'}</button>`:''}</div>
@@ -1123,22 +1177,24 @@ function vReports(){
 
 function vSettings(){
   return `
-  <div class="pagehead"><div><div class="eyebrow">Doctors only</div><h1 style="margin-top:8px">Categories and settings</h1><p>The category decides who attends. The longest matching keyword in the designation wins, so “joint secretary” comes before “secretary”.</p></div></div>
+  <div class="pagehead"><div><div class="eyebrow">Doctors only</div><h1 style="margin-top:8px">Categories and settings</h1><p>Grade/Status decides the category. If it is not chosen, the app works it out from the designation, using the titles listed for each grade. The longest matching title wins, so “joint secretary” counts as Grade-3, not Grade-1. Family members and guests get the same category as the official.</p></div></div>
   <form id="rulesForm" class="formsec">
-  ${S.rules.map((r,i)=>`<section class="card formsec"><div class="cardhead">${catBadge(r.tier)}</div><div class="fgrid">
+  ${S.rules.map((r,i)=>`<section class="card formsec"><div class="cardhead">${catBadge(r.tier)}<span class="small muted">${RANKS.filter(x=>RANK_TIER[x[0]]===r.tier).map(x=>x[1]).join(', ')}</span></div><div class="fgrid">
     <label class="f" for="rh${i}">Attended by<select id="rh${i}" data-r="${i}" data-k="handler"><option value="Doctor"${r.handler==='Doctor'?' selected':''}>Duty Doctor</option><option value="SI"${r.handler==='SI'?' selected':''}>Sanitary Inspector</option></select></label>
-    <label class="f" for="rt${i}">Instruction shown to staff<input id="rt${i}" data-r="${i}" data-k="note" value="${esc(r.note)}"></label>
-    <label class="f wide" for="rk${i}">Designation keywords, comma separated<textarea id="rk${i}" data-r="${i}" data-k="keywords">${esc(r.keywords)}</textarea></label></div></section>`).join('')}
+    <label class="f" for="rt${i}">Instruction shown to staff<input id="rt${i}" data-r="${i}" data-k="note" value="${esc(r.note)}"></label></div>
+    ${RANKS.filter(x=>RANK_TIER[x[0]]===r.tier).map(([rk,lab])=>`<label class="f" for="kw-${rk}">${lab}: titles, comma separated<textarea id="kw-${rk}" data-kw="${rk}">${esc((S.rankKw||defaultRankKw())[rk]||'')}</textarea></label>`).join('')}</section>`).join('')}
   <section class="card formsec"><div class="fgrid">
-    <label class="f" for="r-fam">Family members and guests of officials are<select id="r-fam">${S.rules.map(r=>`<option value="${r.tier}"${Number(S.familyTier)===r.tier?' selected':''}>${esc(r.name)}</option>`).join('')}</select></label>
     <label class="f" for="r-test">Try a designation<input id="r-test" placeholder="e.g. Additional Secretary"></label></div>
-    <div id="r-testout" class="small muted">Grade-1 and Grade-2 officers are always at least VIP.</div>
-    <div class="btnrow"><button class="btn primary" type="submit">Save</button></div></section>
+    <div id="r-testout" class="small muted">Family members and guests get the same category as the official.</div>
+    <div class="btnrow"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-act="recheck">Apply to existing protocols</button></div></section>
   </form>
   <section class="card"><div class="cardhead"><h2>Logo</h2></div><p class="small muted" style="margin:0 0 10px">Upload the HSIA logo. It is shown to everyone who uses the registry.</p>
     <div class="btnrow"><input type="file" id="logoFile" accept="image/*" style="max-width:320px">${S.logo?'<button class="btn sm" data-act="logo-reset">Remove logo</button>':''}</div></section>
   <section class="card"><div class="cardhead"><h2>Backup</h2></div><p class="small muted" style="margin:0 0 10px">Download every protocol ever entered as one Excel file. Keep a copy each month.</p><button class="btn" data-act="backup">Download full backup</button></section>
-  <section class="card"><div class="cardhead"><h2>Account</h2></div><p class="small muted" style="margin:0 0 10px">Signed in with the doctors' account.</p><button class="btn danger" data-act="signout">Sign out</button></section>
+  <section class="card"><div class="cardhead"><h2>On this phone or tablet</h2></div><div class="fgrid">
+    <label class="f" for="set-idle">Sign out automatically after<select id="set-idle">${[[15,'15 minutes'],[30,'30 minutes'],[60,'1 hour'],[120,'2 hours'],[480,'8 hours (one shift)']].map(([v,l])=>`<option value="${v}"${idleMins()===v?' selected':''}>${l} without use</option>`).join('')}</select></label>
+    <label class="f" for="set-text">Text size<select id="set-text">${[['1','Normal'],['1.12','Large'],['1.25','Extra large']].map(([v,l])=>`<option value="${v}"${String(textZoom())===v?' selected':''}>${l}</option>`).join('')}</select></label></div>
+    <p class="small muted" style="margin:10px 0 0">These apply only to this device.</p></section>
 `;
 }
 
@@ -1173,11 +1229,11 @@ function summaryText(kind){
   if(kind==='tomorrow'){list=list.filter(x=>x.m.date===M);title='Tomorrow, '+dmy(M);}
   else if(kind==='24h'){list=list.filter(x=>{const t=dt(x.m).getTime();return t>=now-36e5&&t<=now+24*36e5;});title='Next 24 hours (from '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+')';}
   else{list=list.filter(x=>x.m.date===T);title='Today, '+dmy(T);}
-  list.sort((a,b)=>dt(a.m)-dt(b.m));
+  list.sort(mvCmp);
   const L=['*HSIA Airport Health Office*','*Protocols: '+title+'*',''];
   if(!list.length)L.push('No protocols.');
   list.forEach(({c,m},i)=>{L.push(`${i+1}. ${m.status==='Done'?'✅ ':''}*${m.time}* ${m.type==='Arrival'?'ARR':'DEP'} ${m.flight}${m.route?' ('+m.route+')':''}`);
-    L.push(`    ${c.vipName}, ${c.designation}${c.org?', '+c.org:''} [${catName(c.tier)}]`);
+    L.push(`    ${c.vipName}, ${c.designation}${c.org?', '+c.org:''} [${catName(c.tier)}${rankLabel(rankOf(c))&&rankOf(c)!=='MIN'?' · '+rankLabel(rankOf(c)):''}]`);
     L.push(`    Attended by: ${m.assigned||m.status==='Done'?WHO[m.attendBy]:'Not assigned'}${c.contact?' | Contact: '+c.contact:''}`);
     if(c.vehicles)L.push('    Vehicles: '+c.vehicles);L.push('');});
   L.push(`Total ${list.length} · Done ${list.filter(x=>x.m.status==='Done').length}`);
@@ -1245,13 +1301,17 @@ function mEdit(c){
       <label class="f" for="e-des">Designation<input id="e-des" value="${esc(c.designation)}"></label>
       <label class="f" for="e-org">Ministry / Directorate<input id="e-org" value="${esc(c.org)}"></label>
       <label class="f" for="e-contact">Contact number<input id="e-contact" type="tel" value="${esc(c.contact)}"></label>
+      <label class="f" for="e-grade">Grade/Status<select id="e-grade">${rankOptions(c.grade)}</select></label>
+      <label class="f" for="e-ben">Protocol is for<select id="e-ben"><option value="Self">The official in person</option><option value="Family/Guest"${c.beneficiary==='Family/Guest'?' selected':''}>Family members / guests of the official</option></select></label>
       <label class="f wide" for="e-guests">Accompanying persons<input id="e-guests" value="${esc(c.guests)}"></label>
       <label class="f wide" for="e-veh">Vehicles<input id="e-veh" value="${esc(c.vehicles)}"></label></div>
     <div class="err" id="e-err"></div>${mBtns('Save changes')}</form>`,b=>{
     $('#mf',b).onsubmit=e=>{e.preventDefault();const g=id=>$(id).value.trim();if(!g('#e-name')||!g('#e-des')){$('#e-err').textContent='Name and designation are needed.';return;}
       const hadContact=!!c.contact;
-      Object.assign(c,{vipName:g('#e-name'),designation:g('#e-des'),org:g('#e-org'),contact:g('#e-contact'),guests:g('#e-guests'),vehicles:g('#e-veh')});
-      addLog(c,!hadContact&&c.contact?'Contact number added':'Protocol details edited');save(c);closeModal();render();toast('Details saved');};});
+      Object.assign(c,{vipName:g('#e-name'),designation:g('#e-des'),org:g('#e-org'),contact:g('#e-contact'),guests:g('#e-guests'),vehicles:g('#e-veh'),grade:$('#e-grade').value,beneficiary:$('#e-ben').value});
+      addLog(c,!hadContact&&c.contact?'Contact number added':'Protocol details edited');
+      if(!/^Set manually/.test(c.tierReason||'')){const cl=classify(c.designation,c.grade);if(cl.tier!==Number(c.tier)){addLog(c,`Category updated from ${catName(c.tier)} to ${catName(cl.tier)} (${cl.reason})`);c.tier=cl.tier;c.movements.forEach(m=>{if(m.status==='Open'&&!m.assigned)m.attendBy=handlerOf(cl.tier);});}c.tierReason=cl.reason;}
+      save(c);closeModal();render();toast('Details saved');};});
   if(!c.contact)setTimeout(()=>{const x=$('#e-contact');if(x)x.focus();},0);
 }
 function mRecat(c){
@@ -1294,7 +1354,7 @@ function applyMode(){
 /* ---------- render + routing ---------- */
 const VIEWS={today:vToday,register:vRegister,reports:vReports,settings:vSettings,new:vNew};
 const tabsFor=()=>MODE==='doctor'
-  ?[['today','Today'],['register','Register'],['reports','Reports'],['settings','Settings']]
+  ?[['today','Today'],['register','Register'],['reports','Reports']]
   :[['today','Today'],['register','Register']];
 function currentNav(){const h=(location.hash||'#today').slice(1);if(h.startsWith('case-'))return 'register';return (VIEWS[h]&&(canEdit()||['today','register'].includes(h)))?h:'today';}
 function paintTabs(nav){
@@ -1302,7 +1362,8 @@ function paintTabs(nav){
   const crit=canEdit()&&READY?actionItems().filter(i=>i.sev==='crit').length:0;
   $('#tabs').innerHTML=tabsFor().map(([k,l])=>`<a href="#${k}" aria-current="${nav===k?'page':'false'}">${l}${k==='today'&&crit?` <span class="count">${crit}</span>`:''}</a>`).join('')
     +(canEdit()?`<a class="cta" href="#new" aria-current="${nav==='new'?'page':'false'}"><span class="lg">+ New protocol</span><span class="sm">+ New</span></a>`:'')
-    +`<button type="button" class="signout${canEdit()?'':' push'}" data-act="signout">Sign out</button>`;
+    ;
+  const gear=$('#gear');if(gear){gear.hidden=!canEdit();gear.setAttribute('aria-current',nav==='settings'?'page':'false');}
 }
 function render(){
   pendingRender=false;
@@ -1327,7 +1388,7 @@ window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
 
 /* ---------- events ---------- */
 document.addEventListener('click',async e=>{
-  const tr=e.target.closest('tr[data-href],.mv[data-href]');if(tr&&!e.target.closest('a,button')){location.hash=tr.dataset.href;return;}
+  const tr=e.target.closest('tr[data-href],.mv[data-href],.vsrow[data-href]');if(tr&&!e.target.closest('a,button')){location.hash=tr.dataset.href;return;}
   const rp=e.target.closest('[data-role]');if(rp){loginRole=rp.dataset.role;$$('[data-role]').forEach(x=>x.setAttribute('aria-pressed',x===rp?'true':'false'));const pw=$('#pw');if(pw)pw.focus();return;}
   const cf=e.target.closest('[data-catf]');if(cf){dashCat=cf.dataset.catf;render();return;}
   const sm=e.target.closest('[data-sum]');if(sm){setSummary(sm.dataset.sum);return;}
@@ -1340,17 +1401,18 @@ document.addEventListener('click',async e=>{
   if(a==='view-file'){mFile(c,el.dataset.key);return;}
   if(a==='print'){window.print();return;}
   if(a==='dl-csv'){downloadText('HSIA-protocols-'+(regF.q.trim()?'search':regF.month||'all')+'.csv',csvOf(regRows()));return;}
-  if(a==='dl-month'){downloadText('HSIA-protocols-'+repMonth+'.csv',csvOf(allMv().filter(x=>x.m.date.startsWith(repMonth)).sort((p,q)=>dt(p.m)-dt(q.m))));return;}
+  if(a==='dl-month'){downloadText('HSIA-protocols-'+repMonth+'.csv',csvOf(allMv().filter(x=>x.m.date.startsWith(repMonth)).sort(mvCmp)));return;}
   if(a==='share'){mShare();return;}
   if(a==='copy-sum'){const t=$('#sumtext').value;try{await navigator.clipboard.writeText(t);toast('Summary copied');}catch(err){const ta=$('#sumtext');ta.focus();ta.select();toast('Select all and copy');}return;}
   if(a==='backup'){if(!Backend.loadAll){toast('Backup is not available.');return;}el.disabled=true;el.textContent='Preparing…';
     Backend.loadAll().then(list=>{list.forEach(x=>{if(!LIVE.has(x.id))ARCH.set(x.id,x);});rebuild();ALL_LOADED=true;
-      downloadText('HSIA-protocols-backup-'+todayStr()+'.csv',csvOf(allMv().sort((p,q)=>dt(p.m)-dt(q.m))));el.disabled=false;el.textContent='Download full backup';})
+      downloadText('HSIA-protocols-backup-'+todayStr()+'.csv',csvOf(allMv().sort(mvCmp)));el.disabled=false;el.textContent='Download full backup';})
     .catch(()=>{el.disabled=false;el.textContent='Download full backup';toast('Could not prepare the backup.');});return;}
   if(a==='copy-csv'){const t=csv();try{await navigator.clipboard.writeText(t);toast('Copied '+regRows().length+' rows. Paste into Excel.');}
     catch(err){openModal(`${mHead('Copy the register','Select all and copy, then paste into Excel.')}<textarea style="min-height:220px" class="mono small" readonly>${esc(t)}</textarea><div class="btnrow"><button class="btn" data-act="close">Close</button></div>`,b=>{const ta=$('textarea',b);ta.focus();ta.select();});}
     return;}
   if(!canEdit())return;
+  if(a==='recheck'){let n=0;S.cases.forEach(x=>{if(/^Set manually/.test(x.tierReason||''))return;const cl=classify(x.designation,x.grade);if(cl.tier!==Number(x.tier)){addLog(x,`Category updated from ${catName(x.tier)} to ${catName(cl.tier)} (${cl.reason})`);x.tier=cl.tier;x.movements.forEach(m=>{if(m.status==='Open'&&!m.assigned)m.attendBy=handlerOf(cl.tier);});x.tierReason=cl.reason;save(x);n++;}});render();toast(n?n+' protocol'+(n===1?'':'s')+' moved to the new categories':'All protocols already match the categories');return;}
   if(a==='tick')toggleDone(c,m);
   else if(a==='edit-mv')mFlight(c,m);
   else if(a==='add-mv')mFlight(c,null);
@@ -1371,20 +1433,22 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!$('#modal').hidden)closeModal();
-  if(e.key==='Enter'&&e.target.matches('tr[data-href],.mv[data-href]'))location.hash=e.target.dataset.href;
+  if(e.key==='Enter'&&e.target.matches('tr[data-href],.mv[data-href],.vsrow[data-href]'))location.hash=e.target.dataset.href;
 });
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='rf-q'){regF.q=t.value;if(t.value.trim())needAll();const n=$('#rf-note');if(n)n.textContent=t.value.trim()?'Searching all months.':'Type in Search to look across all months.';$('#regTable').innerHTML=regTable();}
   if(t.name==='flight'&&t.closest('[data-row]')){const pl=$('[name=place]',t.closest('[data-row]'));if(pl&&!pl.value.trim()&&routeFor(t.value))rowAuto(t.closest('[data-row]'),'flight');}
-  if(t.id==='r-test'){const r=classify(t.value,'','Self');$('#r-testout').innerHTML=t.value?`${catBadge(r.tier)} <span style="margin-left:6px">${esc(r.reason)}. Attended by ${WHO[rule(r.tier).handler]}.</span>`:'Grade-1 and Grade-2 officers are always at least VIP.';}
+  if(t.id==='r-test'){const r=classify(t.value,'');$('#r-testout').innerHTML=t.value?`${catBadge(r.tier)} <span style="margin-left:6px">${esc(r.reason)}. Attended by ${WHO[rule(r.tier).handler]}.</span>`:'Family members and guests get the same category as the official.';}
 });
 document.addEventListener('change',async e=>{
   const t=e.target;
   if(t.dataset&&t.dataset.pick){PICK[t.dataset.pick]=t.files&&t.files[0]||null;const box=document.getElementById(t.dataset.pick);if(box)$('.fname',box).textContent=PICK[t.dataset.pick]?PICK[t.dataset.pick].name:'No file chosen';return;}
   if((t.name==='flight'||t.name==='place'||t.name==='type')&&t.closest('[data-row]')){rowAuto(t.closest('[data-row]'),t.name);return;}
-  if(t.id==='f-name'){const p=personFor(t.value);if(p){let n=0;[['#f-des','designation'],['#f-org','org'],['#f-contact','contact']].forEach(([s,k])=>{const el=$(s);if(el&&!el.value.trim()&&p[k]){el.value=p[k];n++;}});const g=$('#f-grade');if(g&&!g.value&&p.grade){g.value=p.grade;n++;}if(n){updateCatBox();toast('Details filled in from an earlier protocol');}}return;}
+  if(t.id==='f-name'){const p=personFor(t.value);if(p){let n=0;[['#f-des','designation'],['#f-org','org'],['#f-contact','contact']].forEach(([s,k])=>{const el=$(s);if(el&&!el.value.trim()&&p[k]){el.value=p[k];n++;}});const g=$('#f-grade');if(g&&!g.value&&normGrade(p.grade)){g.value=normGrade(p.grade);n++;}if(n){updateCatBox();toast('Details filled in from an earlier protocol');}}return;}
   if(['rf-month','rf-type','rf-status','rf-cat'].includes(t.id)){regF[t.id.slice(3)]=t.value;if(t.id==='rf-month')needMonth(t.value);$('#regTable').innerHTML=regTable();}
+  else if(t.id==='set-idle'){SETPREF('idle',t.value);touch();toast('Automatic sign-out: '+t.options[t.selectedIndex].text);}
+  else if(t.id==='set-text'){SETPREF('zoom',t.value);applyZoom();}
   else if(t.id==='rep-month'){repMonth=t.value||repMonth;render();}
   else if(t.id==='logoFile'&&canEdit()){try{const f=await prepareFile(t,360);if(f&&/^image\//.test(f.type)){S.logo=f.data;saveSettings();paintLogo();render();toast('Logo updated for everyone');}else toast('Choose an image file.');}catch(er){toast(er.message);}}
 });
@@ -1398,7 +1462,7 @@ document.addEventListener('submit',async e=>{
     if(miss.length){err.textContent='Fill in: '+miss.join(', ')+'.';return;}
     if(!f.dataset.force){const dups=[];rows.forEach(r=>allMv().forEach(x=>{if(x.m.status!=='Cancelled'&&fkey(x.m.flight)===fkey(r.flight)&&x.m.date===r.date&&!dups.includes(x))dups.push(x);}));if(dups.length){mDup(dups);return;}}
     delete f.dataset.force;
-    const cl=classify(v('#f-des'),v('#f-grade'),$('#f-ben').value);
+    const cl=classify(v('#f-des'),v('#f-grade'));
     const c=mk({vipName:v('#f-name'),designation:v('#f-des'),org:v('#f-org'),grade:v('#f-grade'),beneficiary:$('#f-ben').value,guests:v('#f-guests'),contact:v('#f-contact'),vehicles:v('#f-veh'),
       tier:cl.tier,tierReason:cl.reason,movements:rows.map(r=>mv(Object.assign(r,{attendBy:handlerOf(cl.tier)})))});
     const btn=f.querySelector('button[type=submit]');btn.disabled=true;
@@ -1410,7 +1474,7 @@ document.addEventListener('submit',async e=>{
   else if(f.id==='loginForm'){
     e.preventDefault();const pw=$('#pw').value;const er=$('#loginErr');const btn=$('#loginBtn');
     if(!pw){er.textContent='Enter the password.';return;}
-    btn.disabled=true;btn.textContent='Signing in…';er.textContent='';
+    btn.disabled=true;btn.textContent='Signing in…';er.textContent='';window.__justSignedIn=true;touch();
     Backend.signIn('doctor',pw).catch(x=>{btn.disabled=false;btn.textContent='Sign in';
       const code=(x&&x.code)||'unknown';const who='Doctor';
       const MSG={
@@ -1429,15 +1493,31 @@ document.addEventListener('submit',async e=>{
       er.innerHTML=esc(MSG[code]||'Could not sign in.')+'<div class="small muted" style="margin-top:4px;font-weight:500">Account: '+esc((window.HSIA_ACCOUNTS||{})[loginRole]||'')+' · Code: '+esc(code)+'</div>';});
   }
   else if(f.id==='rulesForm'){
-    e.preventDefault();if(!canEdit())return;S.rules=JSON.parse(JSON.stringify(S.rules||defaultRules()));$$('[data-r]',f).forEach(i=>{S.rules[+i.dataset.r][i.dataset.k]=i.value;});S.familyTier=Number($('#r-fam').value);saveSettings();render();toast('Settings saved for everyone');
+    e.preventDefault();if(!canEdit())return;S.rules=JSON.parse(JSON.stringify(S.rules||defaultRules()));$$('[data-r]',f).forEach(i=>{S.rules[+i.dataset.r][i.dataset.k]=i.value;});S.rankKw=Object.assign(defaultRankKw(),S.rankKw||{});$$('[data-kw]',f).forEach(t=>{S.rankKw[t.dataset.kw]=t.value;});saveSettings();render();toast('Settings saved for everyone');
   }
 });
 
+const PREF=k=>{try{return localStorage.getItem('hsia-'+k);}catch(e){return null;}};
+const SETPREF=(k,v)=>{try{localStorage.setItem('hsia-'+k,String(v));}catch(e){}};
+const idleMins=()=>Number(PREF('idle'))||30;
+const textZoom=()=>Number(PREF('zoom'))||1;
+function applyZoom(){document.documentElement.style.zoom=textZoom()===1?'':String(textZoom());}
+function touch(){SETPREF('last',Date.now());}
+function idleCheck(){
+  if(!USER)return;const last=Number(PREF('last'))||Date.now();
+  if(Date.now()-last>idleMins()*6e4){stopData();Backend.signOut();toast('Signed out after '+idleMins()+' minutes without use.');}
+}
+['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{if(USER)touch();},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')idleCheck();});
+setInterval(idleCheck,30000);
 function boot(){
+  applyZoom();
   document.body.insertAdjacentHTML('beforeend',airportList());
   render();
   Backend.onAuth(u=>{
     if(u&&u.role!=='doctor'){Backend.signOut();toast('Only the doctors\' account can use the registry.');return;}
+    if(u&&USER===null&&PREF('last')&&Date.now()-Number(PREF('last'))>idleMins()*6e4&&!window.__justSignedIn){Backend.signOut();return;}
+    window.__justSignedIn=false;if(u)touch();
     USER=u;MODE=u?u.role:null;applyMode();
     if(u){READY=false;startData();}else stopData();
     render();
