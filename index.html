@@ -351,6 +351,7 @@ table.reg td,table.reg td.date,table.reg td.time,table.reg td.tickcell{vertical-
   .mv .side .row,.vsa{gap:8px}
   a.tel{padding:6px 0}
 }
+.steps.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 /* ---------- category & status ---------- */
 .cat{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--display);font-stretch:115%;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px 5px 8px;border-radius:6px;color:var(--cat-ink);white-space:nowrap}
 .cat::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
@@ -528,7 +529,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:v
 <div class="wrap tabsbar"><nav class="tabs" id="tabs" aria-label="Sections"></nav></div>
 <div class="wrap printhead" aria-hidden="true">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · Printed <span id="printdate"></span></div>
 <main class="wrap" id="view"></main>
-<footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · <b>Version 10 (6 Nov 2026)</b></footer>
+<footer id="foot">Hazrat Shahjalal International Airport · Airport Health Office · Protocol Registry · <b>Version 11 (6 Nov 2026)</b></footer>
 <div id="modal" class="modal" hidden><div class="sheet" role="dialog" aria-modal="true" id="modalBody"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="firebase-config.js"></script>
@@ -754,10 +755,12 @@ const RANK_IDX={MIN:0,'1':1,'2':2,'3':3,'4':4,'':5};
 const mvCmp=(a,b)=>(dt(a.m)-dt(b.m))||(Number(a.c.tier)-Number(b.c.tier))||(RANK_IDX[rankOf(a.c)]-RANK_IDX[rankOf(b.c)]);
 
 /* ---------- status ---------- */
+/* The Protocol / VIP lounge letter is needed only when the protocol has an international flight. */
+const needsFwd=c=>c.movements.some(m=>m.status!=='Cancelled'&&m.scope!=='Domestic');
 function caseStage(c){
-  const f=fwdOf(c);
+  if(needsFwd(c)){const f=fwdOf(c);
   if(!f.sentAt)return 0;
-  if(!f.ackAt)return 1;
+  if(!f.ackAt)return 1;}
   const act=c.movements.filter(m=>m.status!=='Cancelled');
   if(act.length&&act.every(m=>m.status==='Done'))return 3;
   return 2;
@@ -787,7 +790,8 @@ function actionItems(){
     if(live.length){
       const next=Math.min(...live.map(m=>dt(m).getTime()));
       const urgent=(next-now)<=24*36e5,st=caseStage(c);
-      if(st===0)items.push({sev:urgent?'crit':'warn',c,text:'Forward the letter to the Protocol / VIP lounge section',due:next});
+      if(!needsFwd(c)){}
+      else if(st===0)items.push({sev:urgent?'crit':'warn',c,text:'Forward the letter to the Protocol / VIP lounge section',due:next});
       else{const f=fwdOf(c);if(f.sentAt&&!f.ackAt)items.push({sev:urgent?'crit':'warn',c,text:'Signed copy pending from the Protocol / VIP lounge section',due:next});}
       if(needsContact(c))items.push({sev:urgent?'crit':'warn',c,text:'Add a contact number',due:next});
       live.forEach(m=>{const h=(dt(m).getTime()-now)/36e5;if(!m.assigned&&h<=48)items.push({sev:h<=24?'crit':'warn',c,text:'Assign '+WHO[m.attendBy]+' for '+m.flight,due:dt(m).getTime()});});
@@ -1131,7 +1135,9 @@ function vCase(id){
   const c=caseById(id),ed=canEdit();
   if(!c){Backend.getCase(id).then(x=>{if(x){ARCH.set(x.id,x);rebuild();render();}else{const v=$('#view');if(v&&location.hash==='#case-'+id)v.innerHTML='<div class="card">This protocol was not found. <a href="#register">Back to the register</a></div>';}}).catch(()=>{});return '<div class="card empty">Loading…</div>';}
   const st=caseStage(c),cls=CATCLS[Number(c.tier)];
-  const steps=STAGES.map((s,i)=>`<li class="${i<st||st===3?'done':i===st?'now':''}">${s}</li>`).join('');
+  const nf=needsFwd(c);
+  const steps=nf?STAGES.map((s,i)=>`<li class="${i<st||st===3?'done':i===st?'now':''}">${s}</li>`).join('')
+    :`<li class="done">Registered</li><li class="${st===3?'done':'now'}">Completed</li>`;
   const secRows=['protocol'].map(k=>{const f=fwdOf(c);let state,act='';
     if(f.ackAt)state=`<span class="pill ok">Signed copy received</span><div class="small muted" style="margin-top:4px">${esc(f.ackBy||'')} · ${esc(f.ackAt)}</div>`;
     else if(f.sentAt){state=`<span class="pill warn">Awaiting signed copy</span><div class="small muted" style="margin-top:4px">Sent ${esc(f.sentAt)}</div>`;if(ed)act=`<button class="btn sm primary" data-act="ack" data-case="${c.id}" data-sec="${k}">Record signed copy</button>`;}
@@ -1158,8 +1164,8 @@ function vCase(id){
   <section class="card casehead ${cls}">
     <div class="pagehead"><div><div class="btnrow">${catBadge(c.tier)}<span class="small muted">${esc(c.tierReason)}</span></div>
       <h1 style="margin-top:10px">${esc(c.vipName)}</h1><p>${esc(c.designation)}${c.org?', '+esc(c.org):''}${c.beneficiary==='Family/Guest'?' · protocol for family / guests':''}</p></div>
-      ${ed?`<div class="btnrow">${st===0?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward letter</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
-    <ol class="steps" aria-label="Progress">${steps}</ol>
+      ${ed?`<div class="btnrow">${st===0&&nf?`<button class="btn primary" data-act="forward" data-case="${c.id}">Forward letter</button>`:''}<button class="btn" data-act="edit" data-case="${c.id}">Edit details</button><button class="btn" data-act="recat" data-case="${c.id}">Change category</button></div>`:''}</div>
+    <ol class="steps${nf?'':' two'}" aria-label="Progress">${steps}</ol>
   </section>
   <section class="card flush"><div class="cardhead"><div><h2>Flights</h2><span class="small muted">${esc(rule(c.tier).note)}</span></div>${ed?`<button class="btn sm" data-act="add-mv" data-case="${c.id}">+ Add flight</button>`:''}</div>
     <div class="scroll"><table class="mvtable"><thead><tr><th>Time</th><th>Flight</th><th>Attended by</th><th>Status</th>${ed?'<th></th>':''}</tr></thead><tbody>${rows}</tbody></table></div></section>
@@ -1171,7 +1177,7 @@ function vCase(id){
       <dt>Vehicles</dt><dd>${esc(c.vehicles||'–')}</dd></dl></section>
     <section class="card"><div class="cardhead"><h2>Protocol letter</h2>${ed?`<button class="btn sm" data-act="attach" data-case="${c.id}">${letter?'Replace':'Attach letter'}</button>`:''}</div>
       ${letter||'<p class="muted" style="margin:0">No letter attached.</p>'}</section>
-    <section class="card"><div class="cardhead"><h2>Forwarding and signed copies</h2></div>${secRows}</section>
+    <section class="card"><div class="cardhead"><h2>Forwarding and signed copies</h2></div>${nf?secRows:'<div class="secrow"><div><span class="pill muted">Not needed</span><div class="small muted" style="margin-top:6px">Domestic flights only, so no letter goes to the Protocol / VIP lounge section.</div></div></div>'}</section>
     <section class="card"><div class="cardhead"><h2>Activity log</h2></div><ul class="log">${c.log.slice().reverse().map(l=>`<li><time>${esc(l.at)}</time><span>${esc(l.text)}</span></li>`).join('')}</ul></section>
   </div>`;
 }
@@ -1222,7 +1228,7 @@ function vSettings(){
   <section class="card"><div class="cardhead"><h2>On this phone or tablet</h2></div><div class="fgrid">
     <label class="f" for="set-idle">Sign out automatically after<select id="set-idle">${[[15,'15 minutes'],[30,'30 minutes'],[60,'1 hour'],[120,'2 hours'],[480,'8 hours (one shift)']].map(([v,l])=>`<option value="${v}"${idleMins()===v?' selected':''}>${l} without use</option>`).join('')}</select></label>
     <label class="f" for="set-text">Text size<select id="set-text">${[['1','Normal'],['1.12','Large'],['1.25','Extra large']].map(([v,l])=>`<option value="${v}"${String(textZoom())===v?' selected':''}>${l}</option>`).join('')}</select></label></div>
-    <p class="small muted" style="margin:10px 0 0">These apply only to this device. App version 10 (6 Nov 2026).</p></section>
+    <p class="small muted" style="margin:10px 0 0">These apply only to this device. App version 11 (6 Nov 2026).</p></section>
 `;
 }
 
